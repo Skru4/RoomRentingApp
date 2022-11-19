@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
 using RoomRentingApp.Infrastructure.Data;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
+using RoomRentingApp.ModelBinders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +23,11 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
         options.Password.RequireUppercase = false;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddMvcOptions(options =>
+    {
+        options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+    });
 
 builder.Services.AddScoped<IRepository, Repository>();
 

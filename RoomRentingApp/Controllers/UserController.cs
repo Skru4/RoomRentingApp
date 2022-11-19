@@ -38,7 +38,7 @@ namespace RoomRentingApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(model); 
             }
 
             var user = new ApplicationUser()
