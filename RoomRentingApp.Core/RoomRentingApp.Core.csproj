@@ -12,8 +12,6 @@
 
   <ItemGroup>
     <Folder Include="Contracts\" />
-    <Folder Include="Constants\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

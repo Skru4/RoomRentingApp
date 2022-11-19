@@ -46,14 +46,11 @@ namespace RoomRentingApp.Controllers
                 Email = model.Email,
                 UserName = model.UserName
             };
-            //userManager hash the password
+
             var result = await userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                //this logs in the user automatically (but we do not want that)
-                //await signInManager.SignInAsync(user, isPersistent: false);
-
                 return RedirectToAction("Login", "User");
             }
 
