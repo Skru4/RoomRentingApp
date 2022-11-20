@@ -1,8 +1,30 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Microsoft.AspNetCore.Identity
+@using RoomRentingApp.Infrastructure.Models
+@inject UserManager<ApplicationUser> UserManager
+@{
+	this.ViewData["Title"] = "Main Page";
 }
+<div class="w-75 mx-auto">
+  @if (!this.User.Identity!.IsAuthenticated)
+{
+	<h1 class="text-center">Room Renting Application</h1>
+	<h2 class="text-center">Finding rooms or giving ones have never been easier.</h2>
+	<hr class="bg-dark" />
+	<h3 class="mt-4">
+		<a class="text-secondary" href="/User/Login">Login</a> if you are already a part of our community
+	</h3>
+	<h3 class="mt-4">
+		<a class="text-secondary" href="/User/Register">Register</a> to become part of us!
+	</h3>
+}
+  else
+  {
+	  <h1 class="text-center">Welcome, <b>@this.ViewBag.PersonName!</b></h1>
+	  <hr class="bg-secondary" />
+	  <h3 class="mt-4 text-secondary text-center">We over at <b style="color:darkslateblue;">Room Renting App</b> wish you a very safe and happy journey with us!</h3>
+	  <h5 class="text-muted text-center">Explore our cities</h5>
+	  <h5 class="text-muted text-center">Discover cozy homes, stunning flats to great rooms across the globe.</h5>
+  }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+

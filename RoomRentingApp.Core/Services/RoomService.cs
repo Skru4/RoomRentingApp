@@ -1,4 +1,4 @@
-﻿using RoomRentingApp.Core.Constants;
+﻿using RoomRentingApp.Core.Contracts;
 
 namespace RoomRentingApp.Core.Services
 {

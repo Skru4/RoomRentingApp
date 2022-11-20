@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
-using RoomRentingApp.Core.Constants;
+using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Services;
 using RoomRentingApp.Infrastructure.Data;
 using RoomRentingApp.Infrastructure.Data.Common;
@@ -32,7 +32,8 @@ builder.Services.AddControllersWithViews()
     });
 
 builder.Services.AddScoped<IRepository, Repository>()
-    .AddScoped<IRoomService, RoomService>();
+    .AddScoped<IRoomService, RoomService>()
+    .AddScoped<ILandlordService, LandlordService>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

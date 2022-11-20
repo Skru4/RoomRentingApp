@@ -1,4 +1,4 @@
-﻿namespace RoomRentingApp.Core.Constants
+﻿namespace RoomRentingApp.Core.Contracts
 {
     public interface IRoomService
     {
