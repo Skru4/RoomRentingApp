@@ -18,6 +18,14 @@ namespace RoomRentingApp.Infrastructure.Models
         [StringLength(20)]
         public string PhoneNumber { get; set; } = null!;
 
+        [Required]
+        [StringLength(30)] 
+        public string FirstName { get; set; } = null!;
+
+        [Required]
+        [StringLength(30)]
+        public string LastName { get; set; } = null!;
+
         [ForeignKey(nameof(User))]
         public string UserId { get; set; } = null!;
 

@@ -40,7 +40,7 @@ namespace RoomRentingApp.Controllers
             {
                 return View(model);
             }
-            if (await landlordService.UserExistByIdAsync(User.Id()))
+            if (await landlordService.UserExistByIdAsync(userId))
             {
                 TempData[MessageConstants.ErrorMessage] = "You are already a Landlord";
 
@@ -61,7 +61,7 @@ namespace RoomRentingApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            await landlordService.CreateNewLandlordAsync(User.Id(), model.PhoneNumber, model.Email);
+            await landlordService.CreateNewLandlordAsync(User.Id(), model.PhoneNumber,model.FirstName, model.LastName);
 
             return RedirectToAction("Index","Home"); //TODO change when Action is ready
         }

@@ -1,0 +1,45 @@
+﻿@model RoomRentingApp.Core.Models.Landlord.RentOutRoomsModel
+
+@{
+	ViewBag.Ttile = "Become a Landlord and rent-out your rooms";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState["Error"] != null)
+{
+	<div class="alert alert-danger" role="alert">
+		@ViewData.ModelState["Error"].Errors.First().ErrorMessage
+	</div>
+}
+
+<div class="row">
+	<div class="col-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+		<form method="post">
+			<div class="form-group">
+				<label asp-for="PhoneNumber"></label>
+				<input asp-for="PhoneNumber" class="form-control" placeholder="+359888888888">
+				<span asp-validation-for="PhoneNumber" class="small text-danger"></span> 
+				
+				<label asp-for="Email"></label>
+				<input asp-for="Email" class="form-control" placeholder="Someone@mail.com">
+				<span asp-validation-for="Email" class="small text-danger"></span> 
+				
+				<label asp-for="FirstName"></label>
+				<input asp-for="FirstName" class="form-control" placeholder="Someone">
+				<span asp-validation-for="FirstName" class="small text-danger"></span>
+				<label asp-for="LastName"></label>
+				<input asp-for="LastName" class="form-control" placeholder="Someone">
+				<span asp-validation-for="LastName" class="small text-danger"></span>
+			</div>
+			<div class="text-center">
+				<input class="btn btn-primary mt-3 " type="submit" value="Save" />
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

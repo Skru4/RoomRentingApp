@@ -26,15 +26,16 @@ namespace RoomRentingApp.Core.Services
             => await repo.All<Landlord>()
                 .AnyAsync(l=>l.User.Email == email);
 
-        public async Task CreateNewLandlordAsync(string userId, string phoneNumber, string email)
+        public async Task CreateNewLandlordAsync(string userId, string phoneNumber, string firstName, string lastName)
         {
             var landlord = new Landlord()
             {
                  UserId = userId,
-                 PhoneNumber = phoneNumber
+                 PhoneNumber = phoneNumber,
+                 FirstName = firstName,
+                 LastName = lastName
             };
-
-            landlord.User.Email = email;
+            
 
             await repo.AddAsync(landlord);
             await repo.SaveChangesAsync();

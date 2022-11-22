@@ -15,5 +15,15 @@ namespace RoomRentingApp.Core.Models.Landlord
         [StringLength(50, MinimumLength =5)]
         [EmailAddress]
         public string Email { get; set; } = null!;
+
+        [Required]
+        [StringLength(30, MinimumLength = 3)]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; } = null!;
+
+        [Required]
+        [StringLength(30, MinimumLength = 3)]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; } = null!;
     }
 }

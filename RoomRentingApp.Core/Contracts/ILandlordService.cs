@@ -8,7 +8,7 @@
 
         Task<bool> UserEmailExistAsync(string email);
 
-        Task CreateNewLandlordAsync(string userId, string phoneNumber, string email);
+        Task CreateNewLandlordAsync(string userId, string phoneNumber, string fistName, string lastName);
 
     }
 }
