@@ -33,7 +33,8 @@ builder.Services.AddControllersWithViews()
 
 builder.Services.AddScoped<IRepository, Repository>()
     .AddScoped<IRoomService, RoomService>()
-    .AddScoped<ILandlordService, LandlordService>();
+    .AddScoped<ILandlordService, LandlordService>()
+    .AddScoped<IRenterService, RenterService>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

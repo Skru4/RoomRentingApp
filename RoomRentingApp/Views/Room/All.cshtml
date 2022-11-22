@@ -1,0 +1,30 @@
+﻿@model IEnumerable<RoomRentingApp.Core.Models.Room.AllRoomsViewModel>
+
+@{
+	ViewBag.Ttile = "All rooms";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+
+<div class="text-center row">
+@foreach (var room in Model)
+{
+	<div class="card col-4" style="width: 20rem;">
+		<img class="card-img-top" style="width: 18rem;"
+		     src="@room.ImageUrl" alt="Room image">
+		<div class="card-body">
+
+			<h5 class="card-title mt-1">@room.Description</h5>
+			<p class="mb-0">Address: @room.Address</p>
+			<p class="mb-0">Price: @room.PricePerWeek</p>
+			<p>Size: @room.Categories.RoomSize</p>
+			<p>L.s.: @room.Categories.LandlordStatus</p>
+			<p>Town: @room.Town</p>
+		</div>
+
+		
+	</div>
+}
+</div>

@@ -32,7 +32,7 @@ namespace RoomRentingApp.Infrastructure.Models
 
         [ForeignKey(nameof(RoomCategory))]
         public int RoomCategoryId { get; set; }
-        public RoomCategory RoomCategory { get; set; } = null!;
+        public RoomCategory RoomCategory { get; set; } = null!; 
 
         [ForeignKey(nameof(Landlord))]
         public Guid LandlordId { get; set; }

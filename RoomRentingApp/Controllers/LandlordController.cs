@@ -9,11 +9,13 @@ namespace RoomRentingApp.Controllers
     public class LandlordController : BaseController
 	{
 		private readonly ILandlordService landlordService;
+        private readonly IRenterService renterService;
 
 
-        public LandlordController(ILandlordService landlordService)
+        public LandlordController(ILandlordService landlordService, IRenterService renterService)
         {
             this.landlordService = landlordService;
+            this.renterService = renterService;
         }
 
 		[HttpGet]
@@ -22,6 +24,13 @@ namespace RoomRentingApp.Controllers
             if (await landlordService.UserExistByIdAsync(User.Id()))
             {
                 TempData[MessageConstants.ErrorMessage] = "You are already a Landlord";
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (await renterService.UserExistByIdAsync(User.Id()))
+            {
+                TempData[MessageConstants.ErrorMessage] = "Renters can't rent-out rooms";
 
                 return RedirectToAction("Index", "Home");
             }
@@ -57,6 +66,12 @@ namespace RoomRentingApp.Controllers
             if (await landlordService.UserPhoneNumberExistsAsync(model.PhoneNumber))    
             {
                 TempData[MessageConstants.ErrorMessage] = "This phone number is already in use";
+
+                return RedirectToAction("Index", "Home");
+            }
+            if (await renterService.UserExistByIdAsync(User.Id()))
+            {
+                TempData[MessageConstants.ErrorMessage] = "Renters can't rent-out rooms";
 
                 return RedirectToAction("Index", "Home");
             }

@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
 
 namespace RoomRentingApp.Core.Models.Landlord
 {
-	public class RentOutRoomsModel
+    public class RentOutRoomsModel
     {
         [Required]
         [StringLength(20, MinimumLength = 7)]

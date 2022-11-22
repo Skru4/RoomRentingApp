@@ -20,8 +20,4 @@
     <ProjectReference Include="..\RoomRentingApp.Core\RoomRentingApp.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Room\" />
-  </ItemGroup>
-
 </Project>
