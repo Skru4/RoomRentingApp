@@ -63,6 +63,8 @@ namespace RoomRentingApp.Controllers
 
             await renterService.CreateNewRenterAsync(User.Id(), model.PhoneNumber, model.Job);
 
+            TempData[MessageConstants.SuccessMessage] = "You have become a Landlord and now can rent-out rooms!";
+
             return RedirectToAction("Index", "Home"); //TODO change when Action is ready
         }
     }

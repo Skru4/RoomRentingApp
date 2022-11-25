@@ -1,4 +1,5 @@
-﻿@model IEnumerable<RoomRentingApp.Core.Models.Room.AllRoomsViewModel>
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<AllRoomsViewModel>
 
 @{
 	ViewBag.Ttile = "All rooms";
@@ -19,11 +20,14 @@
 			<h5 class="card-title mt-1">@room.Description</h5>
 			<p class="mb-0">Address: @room.Address</p>
 			<p class="mb-0">Price: @room.PricePerWeek</p>
+			<p class="mb-0">Rating: @room.Ratings.RatingDigit</p>
 			<p>Size: @room.Categories.RoomSize</p>
 			<p>L.s.: @room.Categories.LandlordStatus</p>
 			<p>Town: @room.Town</p>
 		</div>
-
+		<form class="input-group-sm" asp-route-roomId="@room.Id" asp-controller="Room" asp-action="AddToCollection" method="post">
+			<input type="submit" value="Mark as Watched" class="fs-6 btn btn-success mb-3 p-2" />
+		</form>
 		
 	</div>
 }

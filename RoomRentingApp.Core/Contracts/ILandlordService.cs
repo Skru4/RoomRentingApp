@@ -10,5 +10,6 @@
 
         Task CreateNewLandlordAsync(string userId, string phoneNumber, string fistName, string lastName);
 
+        Task<Guid> GetLandlordIdAsync(string userId); 
     }
 }

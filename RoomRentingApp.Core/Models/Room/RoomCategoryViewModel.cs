@@ -6,8 +6,8 @@ namespace RoomRentingApp.Core.Models.Room
 	{
         public int Id { get; set; }
 
-        public string RoomSize { get; set; } = null!;
+        public string RoomSize { get; set; }
 
-        public string LandlordStatus { get; set; } = null!;
+        public string LandlordStatus { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using RoomRentingApp.Infrastructure.Models;
+﻿using RoomRentingApp.Core.Models.Rating;
+using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Core.Models.Room
 {
@@ -17,5 +18,7 @@ namespace RoomRentingApp.Core.Models.Room
         public string Town { get; set; } = null!;
 
         public RoomCategoryViewModel Categories { get; set; }
+
+        public RatingViewModel Ratings { get; set; }
     }
 }
