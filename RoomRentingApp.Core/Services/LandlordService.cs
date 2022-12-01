@@ -47,5 +47,7 @@ namespace RoomRentingApp.Core.Services
             return (await repo.AllReadonly<Landlord>()
                 .FirstOrDefaultAsync(l => l.UserId == userId)).Id;
         }
+
+        
     }
 }

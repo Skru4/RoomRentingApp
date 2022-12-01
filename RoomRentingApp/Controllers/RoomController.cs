@@ -2,7 +2,6 @@
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Extensions;
-using System.Security.Claims;
 
 namespace RoomRentingApp.Controllers
 {

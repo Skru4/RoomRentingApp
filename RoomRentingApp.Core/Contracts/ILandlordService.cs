@@ -1,4 +1,6 @@
-﻿namespace RoomRentingApp.Core.Contracts
+﻿using RoomRentingApp.Infrastructure.Models;
+
+namespace RoomRentingApp.Core.Contracts
 {
     public interface ILandlordService
     {
@@ -10,6 +12,7 @@
 
         Task CreateNewLandlordAsync(string userId, string phoneNumber, string fistName, string lastName);
 
-        Task<Guid> GetLandlordIdAsync(string userId); 
+        Task<Guid> GetLandlordIdAsync(string userId);
+
     }
 }

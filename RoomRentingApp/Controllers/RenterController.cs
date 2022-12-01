@@ -2,20 +2,23 @@
 using RoomRentingApp.Core.Constants;
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Renter;
-using RoomRentingApp.Core.Services;
 using RoomRentingApp.Extensions;
 
 namespace RoomRentingApp.Controllers
 {
-	public class RenterController : BaseController
+    public class RenterController : BaseController
     {
         private readonly IRenterService renterService;
         private readonly ILandlordService landlordService;
+        private readonly IRoleService roleService;
 
-        public RenterController(IRenterService renterService, ILandlordService landlordService)
+        public RenterController(IRenterService renterService,
+            ILandlordService landlordService, 
+            IRoleService roleService)
         {
             this.renterService = renterService;
             this.landlordService = landlordService;
+            this.roleService = roleService;
         }
 
         [HttpGet]
@@ -27,6 +30,15 @@ namespace RoomRentingApp.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
+
+            if (await landlordService.UserExistByIdAsync(User.Id()))
+            {
+                TempData[MessageConstants.ErrorMessage] = "Landlords can't rent rooms";
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            await roleService.CreateRoleAsync("Renter");
 
             var model = new BecomeRenterModel();
 
@@ -63,7 +75,11 @@ namespace RoomRentingApp.Controllers
 
             await renterService.CreateNewRenterAsync(User.Id(), model.PhoneNumber, model.Job);
 
-            TempData[MessageConstants.SuccessMessage] = "You have become a Landlord and now can rent-out rooms!";
+            var user = await roleService.FindUserByIdAsync(User.Id());
+
+            await roleService.AddToRoleAsync(user, "Renter");
+
+            TempData[MessageConstants.SuccessMessage] = "You have become a Renter and now can search for rooms to rent!";
 
             return RedirectToAction("Index", "Home"); //TODO change when Action is ready
         }

@@ -24,6 +24,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequireUppercase = false;
     })
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews()
     .AddMvcOptions(options =>
@@ -31,17 +32,19 @@ builder.Services.AddControllersWithViews()
         options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
     });
 
-builder.Services.AddScoped<IRepository, Repository>()
+builder.Services.
+     AddScoped<IRepository, Repository>()
     .AddScoped<IRoomService, RoomService>()
     .AddScoped<ILandlordService, LandlordService>()
-    .AddScoped<IRenterService, RenterService>();
+    .AddScoped<IRenterService, RenterService>()
+    .AddScoped<IRoleService, RoleService>();
+    
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/User/Login";
     options.LogoutPath = "/User/Login";
 });
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
