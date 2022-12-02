@@ -169,6 +169,10 @@ namespace RoomRentingApp.Core.Services
 
             room.RenterId = currentRenterId;
 
+            var renter = await repo.GetByIdAsync<Renter>(currentRenterId);
+
+            renter.Room = room;
+
             await repo.SaveChangesAsync();
         }
 

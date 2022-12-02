@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RoomRentingApp.Core.Constants;
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Extensions;
@@ -92,15 +93,21 @@ namespace RoomRentingApp.Controllers
 
             if (await  roomService.IsRoomRentedAsync(id))
             {
+                TempData[MessageConstants.ErrorMessage] = "This room is already rented";
                 return RedirectToAction("All", "Room");
             }
 
+            if (await renterService.UserHaveRentsAsync(User.Id()))
+            {
+                TempData[MessageConstants.ErrorMessage] = "You can only rent one room";
+
+                return RedirectToAction(nameof(All));
+            }
 
             var renter = await renterService.GetRenterWithUserIdAsync(User.Id());
-
             await roomService.RentRoomAsync(id, renter.Id);
 
-            //TODO add tostr
+            TempData[MessageConstants.SuccessMessage] = "Congrats, You have rented a room!";
 
             return RedirectToAction("All","Room"); //TODO change redirect
         }

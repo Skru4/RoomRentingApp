@@ -11,5 +11,7 @@ namespace RoomRentingApp.Core.Contracts
         Task CreateNewRenterAsync(string userId, string phoneNumber, string job);
 
         Task<Renter> GetRenterWithUserIdAsync(string userId);
+
+        Task<bool> UserHaveRentsAsync(string userId);
     }
 }

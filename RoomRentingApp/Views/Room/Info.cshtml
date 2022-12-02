@@ -26,7 +26,7 @@
 			<p>Town: @Model.Town</p>
 			<p>Landlord Status: <b>@Model.Categories.LandlordStatus</b></p>
 			<p>Room Size: <b>@Model.Categories.RoomSize</b></p>
-			<p><i>(@(Model.IsRented ? "Rented" : "Not Rented"))</i></p>
+			<p style="color:mediumblue"><b>(@(Model.IsRented ? "Rented" : "Not Rented"))</b></p>
 			<div class="form-inline">
 				@if (this.User.Identity.IsAuthenticated)
 				{

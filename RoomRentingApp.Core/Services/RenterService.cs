@@ -41,10 +41,19 @@ namespace RoomRentingApp.Core.Services
         {
             var renter = repo.All<Renter>()
                 .Include(r=>r.User)
+                .Include(r=>r.Room)
                 .Where(r => r.UserId == userId)
                 .FirstOrDefaultAsync();
 
             return renter;
+        }
+
+        public async Task<bool> UserHaveRentsAsync(string userId)
+        {
+            return await repo.All<Renter>()
+                .AnyAsync(r => r.UserId == userId && r.RoomId != null);
+
+
         }
     }
 }
