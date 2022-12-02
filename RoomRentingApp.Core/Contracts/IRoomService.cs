@@ -14,11 +14,17 @@ namespace RoomRentingApp.Core.Contracts
 
         Task<IEnumerable<string>> AllCategoriesSizes();
 
-        Task<IEnumerable<AllRoomsViewModel>> AddRoomToCollectionAsync(Guid roomId, string userId);
+        Task<AllRoomsViewModel> GetInfoAsync(Guid roomId);
 
         Task<int> GetRoomRatingAsync(Guid roomId);
 
         Task<Guid> CreateRoomAsync(RoomCreateModel model, Guid lanlordId);
+
+        Task RentRoomAsync(Guid roomId, Guid currentRenterId);
+
+        Task<bool> RoomExistAsync(Guid roomId);
+
+        Task<bool> IsRoomRentedAsync(Guid roomId);
 
 
 

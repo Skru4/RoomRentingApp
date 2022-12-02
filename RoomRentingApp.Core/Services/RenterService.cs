@@ -36,5 +36,15 @@ namespace RoomRentingApp.Core.Services
             await repo.AddAsync(renter);
             await repo.SaveChangesAsync();
         }
+
+        public Task<Renter> GetRenterWithUserIdAsync(string userId)
+        {
+            var renter = repo.All<Renter>()
+                .Include(r=>r.User)
+                .Where(r => r.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            return renter;
+        }
     }
 }

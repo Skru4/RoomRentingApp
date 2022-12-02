@@ -1,4 +1,6 @@
-﻿namespace RoomRentingApp.Core.Contracts
+﻿using RoomRentingApp.Infrastructure.Models;
+
+namespace RoomRentingApp.Core.Contracts
 {
 	public interface IRenterService
 	{
@@ -7,5 +9,7 @@
         Task<bool> UserPhoneNumberExistsAsync(string phoneNumber);
 
         Task CreateNewRenterAsync(string userId, string phoneNumber, string job);
+
+        Task<Renter> GetRenterWithUserIdAsync(string userId);
     }
 }

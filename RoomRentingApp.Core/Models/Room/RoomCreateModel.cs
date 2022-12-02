@@ -33,10 +33,10 @@ namespace RoomRentingApp.Core.Models.Room
 
         public IEnumerable<RoomCategoryViewModel> RoomCategories { get; set; } = new List<RoomCategoryViewModel>();
 
-        [Display(Name ="Town")]
+        [Display(Name = "Town")]
         public int TownId { get; set; }
 
-        public IEnumerable<TownViewModel> Town { get; set; } = new List<TownViewModel>();
+        public IEnumerable<TownViewModel> Towns { get; set; } = new List<TownViewModel>();
 
     }
 }

@@ -1,0 +1,44 @@
+﻿@model AllRoomsViewModel
+
+@{
+	ViewBag.Title = "Get more information for the chosen room";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+
+<div class="container" style="display:inline">
+	
+	<div class="row">
+		<div class="col-4">
+			<img class="card-img-top" style="width: 20rem;"
+			     src="@Model.ImageUrl" alt="Room Image">
+		</div>
+		<div class="card col-8 border-0">
+			<p style="font-size: 25px;"><u>@Model.Description</u></p>
+			<p>Located in: <b>@Model.Address</b></p>
+			<p>
+				Price Per Week:
+				<b>@String.Format("{0:f2}", Model.PricePerWeek) EUR</b>
+			</p>
+			<p class="mb-0">Rating: @Model.Ratings.RatingDigit</p>
+			<p>Town: @Model.Town</p>
+			<p>Landlord Status: <b>@Model.Categories.LandlordStatus</b></p>
+			<p>Room Size: <b>@Model.Categories.RoomSize</b></p>
+			<p><i>(@(Model.IsRented ? "Rented" : "Not Rented"))</i></p>
+			<div class="form-inline">
+				@if (this.User.Identity.IsAuthenticated)
+				{
+					@if (!Model.IsRented)
+					{
+						<form class="ml-2" asp-controller="Room"
+						      asp-action="RentRoom" asp-route-id="@Model.Id" method="post">
+							<input class="btn btn-primary" type="submit" value="Rent"/>
+						</form>
+					}
+				}
+			</div>
+		</div>
+	</div>
+</div>

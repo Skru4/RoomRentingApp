@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Rating;
 using RoomRentingApp.Core.Models.Room;
@@ -42,7 +43,8 @@ namespace RoomRentingApp.Core.Services
                         Id = r.RoomCategory.Id,
                         LandlordStatus = r.RoomCategory.LandlordStatus,
                         RoomSize = r.RoomCategory.RoomSize
-                    }
+                    },
+                     IsRented = r.RenterId != null
 
 
                 }).ToListAsync();
@@ -88,20 +90,8 @@ namespace RoomRentingApp.Core.Services
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<AllRoomsViewModel>> AddRoomToCollectionAsync(Guid roomId, string userId)
+        public async Task<AllRoomsViewModel> GetInfoAsync(Guid roomId)
         {
-
-            Renter? renter = await repo.All<Renter>()
-                .Where(r => r.UserId == userId)
-                .FirstOrDefaultAsync();
-
-
-            if (renter == null)
-            {
-                throw new ArgumentException("Invalid user ID");
-            }
-
-
             var room = await repo.All<Room>()
                 .Where(r => r.Id == roomId)
                 .Include(r => r.Town)
@@ -116,20 +106,23 @@ namespace RoomRentingApp.Core.Services
                     Town = r.Town.Name,
                     Ratings = new RatingViewModel()
                     {
-                        RatingDigit = (int)(r.Ratings.Average(s => s.RatingDigit))
+                        RatingDigit = r.Ratings.Any() ?  (int)(r.Ratings.Average(s => s.RatingDigit)) : 0
                     },
                     Categories = new RoomCategoryViewModel()
                     {
                         Id = r.RoomCategory.Id,
                         LandlordStatus = r.RoomCategory.LandlordStatus,
                         RoomSize = r.RoomCategory.RoomSize
-                    }
+                    },
+                     IsRented = r.RenterId != null
                 }).FirstOrDefaultAsync();
-            var rooms = new List<AllRoomsViewModel>();
 
-            rooms.Add(room);
+            if (room == null)
+            {
+                throw new ArgumentException("Invalid room ID");
+            }
 
-            return rooms;
+            return room;
         }
 
         public async Task<int> GetRoomRatingAsync(Guid roomId)
@@ -151,12 +144,45 @@ namespace RoomRentingApp.Core.Services
                 LandlordId = lanlordId,
                 RoomCategoryId = model.RoomCategoryId,
                 TownId = model.TownId,
+                Id = model.Id
             };
 
             await repo.AddAsync(room);
             await repo.SaveChangesAsync();
 
             return room.Id;
+        }
+
+        public async Task RentRoomAsync(Guid roomId, Guid currentRenterId)
+        {
+            var room = await repo.GetByIdAsync<Room>(roomId);
+
+            if (room != null && room.RenterId != null)
+            {
+                throw new ArgumentException("Room has already someone renting it");
+            }
+
+            if (room == null)
+            {
+                throw new ArgumentException("This room cannot be found");
+            }
+
+            room.RenterId = currentRenterId;
+
+            await repo.SaveChangesAsync();
+        }
+
+        public async Task<bool> RoomExistAsync(Guid roomId)
+        {
+            return await repo.AllReadonly<Room>()
+                .AnyAsync(r => r.Id == roomId);
+        }
+
+        public async Task<bool> IsRoomRentedAsync(Guid roomId)
+        {
+            return (await repo.GetByIdAsync<Room>(roomId))
+                .RenterId != null;
+
         }
     }
 }
