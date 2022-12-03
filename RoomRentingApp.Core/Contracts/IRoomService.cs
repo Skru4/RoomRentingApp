@@ -1,4 +1,5 @@
-﻿using RoomRentingApp.Core.Models.Room;
+﻿using RoomRentingApp.Core.Models.Rating;
+using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Core.Models.Town;
 
 namespace RoomRentingApp.Core.Contracts
@@ -26,7 +27,9 @@ namespace RoomRentingApp.Core.Contracts
 
         Task<bool> IsRoomRentedAsync(Guid roomId);
 
+        Task<RatingRoomViewModel> GetRoomByIdAsync(Guid id);
 
+        Task AddRatingAsync(RatingRoomViewModel model);
 
     }
 }

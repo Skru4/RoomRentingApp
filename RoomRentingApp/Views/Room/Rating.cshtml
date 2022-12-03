@@ -1,0 +1,56 @@
+﻿@model RatingRoomViewModel
+
+@{
+	ViewBag.Title = "Rate selected room";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<h5 class="text-center">Choose number from 1 to 10</h5>
+
+
+
+<hr />
+
+<div class="card">
+
+	<img style="width: 30rem; margin-left: 30%"
+	     src="@Model.ImageUrl" alt="Room image">
+
+	<div class="card-body">
+
+		<div class="row">
+			<div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+				<h6 class="text-center">@Model.Address</h6>
+				<h6 class="text-center">@Model.Description</h6>
+				<form method="post">
+					<input type="hidden" asp-for="@Model.Id"/>
+					<div class="form-group">
+						<label asp-for="RatingDigit">Give rating</label>
+						<select asp-for="RatingDigit" class="form-control" id="exampleFormControlSelect1">
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+							<option>6</option>
+							<option>7</option>
+							<option>8</option>
+							<option>9</option>
+							<option>10</option>
+						</select>
+						<span asp-validation-for="RatingDigit" class="small text-danger"></span>
+					</div>
+
+					<div class="text-center">
+						<input class="btn btn-primary mt-3" type="submit" value="Save"/>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

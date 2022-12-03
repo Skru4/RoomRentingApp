@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Rating;
 using RoomRentingApp.Core.Models.Room;
@@ -44,7 +43,7 @@ namespace RoomRentingApp.Core.Services
                         LandlordStatus = r.RoomCategory.LandlordStatus,
                         RoomSize = r.RoomCategory.RoomSize
                     },
-                     IsRented = r.RenterId != null
+                    IsRented = r.RenterId != null
 
 
                 }).ToListAsync();
@@ -69,8 +68,8 @@ namespace RoomRentingApp.Core.Services
             return await repo.All<Town>()
                 .Select(t => new TownViewModel()
                 {
-                     Id = t.Id,
-                      Name = t.Name
+                    Id = t.Id,
+                    Name = t.Name
                 }).ToListAsync();
         }
 
@@ -106,7 +105,7 @@ namespace RoomRentingApp.Core.Services
                     Town = r.Town.Name,
                     Ratings = new RatingViewModel()
                     {
-                        RatingDigit = r.Ratings.Any() ?  (int)(r.Ratings.Average(s => s.RatingDigit)) : 0
+                        RatingDigit = r.Ratings.Any() ? (int)(r.Ratings.Average(s => s.RatingDigit)) : 0
                     },
                     Categories = new RoomCategoryViewModel()
                     {
@@ -114,7 +113,7 @@ namespace RoomRentingApp.Core.Services
                         LandlordStatus = r.RoomCategory.LandlordStatus,
                         RoomSize = r.RoomCategory.RoomSize
                     },
-                     IsRented = r.RenterId != null
+                    IsRented = r.RenterId != null
                 }).FirstOrDefaultAsync();
 
             if (room == null)
@@ -187,6 +186,36 @@ namespace RoomRentingApp.Core.Services
             return (await repo.GetByIdAsync<Room>(roomId))
                 .RenterId != null;
 
+        }
+
+        public async Task<RatingRoomViewModel> GetRoomByIdAsync(Guid id)
+        {
+            var room = await repo.GetByIdAsync<Room>(id);
+
+            var result = new RatingRoomViewModel()
+            {
+                Id = room.Id,
+                Address = room.Address,
+                Description = room.Description,
+                ImageUrl = room.ImageUrl,
+            };
+
+            return result;
+        }
+
+        public async Task AddRatingAsync(RatingRoomViewModel model)
+        {
+            var room = await repo.GetByIdAsync<Room>(model.Id);
+
+            int rating = model.RatingDigit;
+
+            room.Ratings.Add(new Rating()
+            {
+                  RoomId = model.Id,
+                   RatingDigit = rating
+            });
+
+           await repo.SaveChangesAsync();
         }
     }
 }

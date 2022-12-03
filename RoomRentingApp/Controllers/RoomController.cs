@@ -112,5 +112,29 @@ namespace RoomRentingApp.Controllers
             return RedirectToAction("All","Room"); //TODO change redirect
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Renter")]
+        public async Task<IActionResult> Rating([FromRoute] Guid Id)
+        {
+            var model = await roomService.GetRoomByIdAsync(Id);
+
+            ViewData[MessageConstants.WarningMessage] = "Choose rating from 1 to 10";
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Renter")]
+        public async Task<IActionResult> Rating(RatingRoomViewModel model)
+        {
+           
+            await roomService.AddRatingAsync(model);
+
+            TempData[MessageConstants.SuccessMessage] = "Successfully rated room";
+
+            return RedirectToAction(nameof(All));
+        }
+
+
     } 
 }

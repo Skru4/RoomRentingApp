@@ -27,18 +27,26 @@
 			<p>Landlord Status: <b>@Model.Categories.LandlordStatus</b></p>
 			<p>Room Size: <b>@Model.Categories.RoomSize</b></p>
 			<p style="color:mediumblue"><b>(@(Model.IsRented ? "Rented" : "Not Rented"))</b></p>
-			<div class="form-inline">
-				@if (this.User.Identity.IsAuthenticated)
-				{
-					@if (!Model.IsRented)
+			<div class=" row">
+				<div class="form-inline">
+					@if (this.User.Identity.IsAuthenticated)
 					{
-						<form class="ml-2" asp-controller="Room"
-						      asp-action="RentRoom" asp-route-id="@Model.Id" method="post">
-							<input class="btn btn-primary" type="submit" value="Rent"/>
-						</form>
+						@if (!Model.IsRented)
+						{
+							<form class="ml-2" asp-controller="Room"
+							      asp-action="RentRoom" asp-route-id="@Model.Id" method="post">
+								<input class="btn btn-primary" type="submit" value="Rent"/>
+							</form>
+						}
 					}
-				}
+				</div>
+				<div>
+					<form class="input-group-sm" asp-route-id="@Model.Id" asp-controller="Room" asp-action="Rating" method="get">
+						<input type="submit" value="Rate " class="fs-6 btn btn-success mb-3 p-2"/>
+					</form>
+				</div>
 			</div>
+			
 		</div>
 	</div>
 </div>
