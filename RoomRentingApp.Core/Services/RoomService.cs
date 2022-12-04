@@ -2,6 +2,7 @@
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Rating;
 using RoomRentingApp.Core.Models.Room;
+using RoomRentingApp.Core.Models.Room.Enum;
 using RoomRentingApp.Core.Models.Town;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
@@ -50,6 +51,66 @@ namespace RoomRentingApp.Core.Services
             return rooms;
         }
 
+        public async Task<RoomsQueryModel> GetAllAsync(string? categoryStatus = null,
+            string? categorySize = null,
+            string? searchTerm = null,
+            string? town = null,
+            RoomSorting sorting = RoomSorting.Price, int currentPage = 1, int roomsPerPage = 1)
+        {
+            var result = new RoomsQueryModel();
+            var rooms = repo.AllReadonly<Room>();
+
+            if (!string.IsNullOrEmpty(categoryStatus))
+            {
+                rooms = rooms
+                    .Where(r => r.RoomCategory.RoomSize == categoryStatus);
+            }
+            if (!string.IsNullOrEmpty(categorySize))
+            {
+                rooms = rooms
+                    .Where(r => r.RoomCategory.RoomSize == categorySize);
+            }
+
+            if (!string.IsNullOrEmpty(town))
+            {
+                rooms = rooms.Where(r=>r.Town.Name == town);
+            }
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = $"%{searchTerm.ToLower()}%";
+
+                rooms = rooms
+                    .Where(r=>EF.Functions.Like(r.Address.ToLower(), searchTerm) ||
+                              EF.Functions.Like(r.Description.ToLower(),searchTerm));
+            }
+
+            rooms = sorting switch
+            {
+                RoomSorting.Price => rooms.OrderBy(r => r.PricePerWeek),
+                RoomSorting.Ratings => rooms.OrderByDescending(r => r.Ratings.Average(x => x.RatingDigit)),
+                _ => rooms.OrderBy(r => r.RenterId)
+            };
+
+            result.Rooms = await rooms
+                .Skip((currentPage - 1) * roomsPerPage)
+                .Take(roomsPerPage)
+                .Select(r => new AllRoomServiceModel()
+                {
+                     Address = r.Address,
+                     Id = r.Id,
+                     ImageUrl = r.ImageUrl,
+                     IsRented = r.RenterId != null,
+                     PricePerWeek = r.PricePerWeek,
+                     Description = r.Description
+                }).ToListAsync();
+
+            result.TotalRoomsCount = await rooms.CountAsync();
+
+            return result;
+        }
+
+
         public async Task<IEnumerable<RoomCategoryViewModel>> GetCategoriesAsync()
         {
             return await repo.All<RoomCategory>()
@@ -72,6 +133,13 @@ namespace RoomRentingApp.Core.Services
                     Name = t.Name
                 }).ToListAsync();
         }
+
+        public async Task<IEnumerable<string>> GetTownNamesAsync()
+        {
+            return await repo.AllReadonly<Town>()
+                .Select(t => t.Name).ToListAsync();
+        }
+
 
         public async Task<IEnumerable<string>> AllCategoriesStatuses()
         {
@@ -124,12 +192,12 @@ namespace RoomRentingApp.Core.Services
             return room;
         }
 
-        public async Task<int> GetRoomRatingAsync(Guid roomId)
+        public async Task<IEnumerable<int>> GetRoomRatingAsync()
         {
-            var room = await repo.GetByIdAsync<Room>(roomId);
+            return await repo.AllReadonly<Rating>()
+                .Select(r => r.RatingDigit)
+                .ToListAsync();
 
-
-            return room.Ratings.Any() ? (int)Math.Round(room.Ratings.Average(x => x.RatingDigit)) : 0;
         }
 
         public async Task<Guid> CreateRoomAsync(RoomCreateModel model, Guid lanlordId)
@@ -143,7 +211,8 @@ namespace RoomRentingApp.Core.Services
                 LandlordId = lanlordId,
                 RoomCategoryId = model.RoomCategoryId,
                 TownId = model.TownId,
-                Id = model.Id
+                Id = model.Id,
+                 
             };
 
             await repo.AddAsync(room);

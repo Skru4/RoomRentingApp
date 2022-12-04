@@ -1,0 +1,27 @@
+﻿@model AllRoomServiceModel
+
+<div class="col-md-4">
+	<div class="card mb-4">
+		<input type="hidden" asp-for="@Model.Id"/>
+		<div class="card col-4" style="width: 27rem;">
+			<img class="card-img-top" style="width: 27rem;"
+			     src="@Model.ImageUrl" alt="Room image">
+			<div class="card-body">
+
+				<h5 class="card-title mt-1">@Model.Description</h5>
+				<p class="mb-0">Address: @Model.Address</p>
+				<b>@String.Format("{0:f2}", @Model.PricePerWeek) EUR</b>
+
+			</div>
+			<div style="margin-left:37%">
+				<form class="input-group-sm" asp-route-roomId="@Model.Id" asp-controller="Room" asp-action="Info" method="post">
+					<input type="submit" value="Inspect Room" class="fs-6 btn btn-success mb-3 p-2"/>
+				</form>
+			</div>
+
+
+		</div>
+	</div>
+		
+	
+</div>

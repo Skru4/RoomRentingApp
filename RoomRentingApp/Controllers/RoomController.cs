@@ -4,12 +4,9 @@ using RoomRentingApp.Core.Constants;
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Extensions;
-
 using static RoomRentingApp.Core.Constants.RenterConstants;
-using static RoomRentingApp.Core.Constants.LandlordConstants;
-using static RoomRentingApp.Core.Constants.UserConstants.Roles;
-using static RoomRentingApp.Core.Constants.UserConstants;
 using static RoomRentingApp.Core.Constants.RoomConstatns;
+using static RoomRentingApp.Core.Constants.UserConstants.Roles;
 
 namespace RoomRentingApp.Controllers
 {
@@ -28,11 +25,25 @@ namespace RoomRentingApp.Controllers
             this.renterService = renterService;
         }
 
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery]AllRoomsQueryModel query)
         {
-            var model = await roomService.GetAllRoomsAsync();
+            var result = await roomService.GetAllAsync(
+                query.CategoryStatus,
+                query.CategorySize,
+                query.SearchTerm,
+                query.Town,
+                query.Sorting,
+                query.CurrentPage,
+                AllRoomsQueryModel.RoomsPerPage);
 
-            return View(model);
+            query.TotalRoomsCount = result.TotalRoomsCount;
+            query.CategoriesStatus = await roomService.AllCategoriesStatuses();
+            query.CategoriesSize = await roomService.AllCategoriesSizes();
+            query.Rooms = result.Rooms;
+            query.Ratings = await roomService.GetRoomRatingAsync();
+            query.Towns = await roomService.GetTownNamesAsync();
+
+            return View(query);
         }
 
         [HttpGet]

@@ -1,5 +1,6 @@
 ﻿using RoomRentingApp.Core.Models.Rating;
 using RoomRentingApp.Core.Models.Room;
+using RoomRentingApp.Core.Models.Room.Enum;
 using RoomRentingApp.Core.Models.Town;
 
 namespace RoomRentingApp.Core.Contracts
@@ -8,8 +9,19 @@ namespace RoomRentingApp.Core.Contracts
     {
         Task<IEnumerable<AllRoomsViewModel>> GetAllRoomsAsync();
 
+        Task<RoomsQueryModel> GetAllAsync(
+            string? categoryStatus = null,
+            string? categorySize = null,
+            string? searchTerm = null,
+            string? town = null,
+            RoomSorting sorting = RoomSorting.Price,
+            int currentPage = 1,
+            int roomsPerPage = 1);
         Task<IEnumerable<RoomCategoryViewModel>> GetCategoriesAsync();
+
         Task<IEnumerable<TownViewModel>> GetTownsAsync();
+
+        Task<IEnumerable<string>> GetTownNamesAsync();
 
         Task<IEnumerable<string>> AllCategoriesStatuses();
 
@@ -17,7 +29,7 @@ namespace RoomRentingApp.Core.Contracts
 
         Task<AllRoomsViewModel> GetInfoAsync(Guid roomId);
 
-        Task<int> GetRoomRatingAsync(Guid roomId);
+        Task<IEnumerable<int>> GetRoomRatingAsync();
 
         Task<Guid> CreateRoomAsync(RoomCreateModel model, Guid lanlordId);
 
