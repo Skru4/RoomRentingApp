@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Rating;
 using RoomRentingApp.Core.Models.Room;
@@ -341,6 +342,31 @@ namespace RoomRentingApp.Core.Services
                     },
                     IsRented = r.RenterId != null
                 }).ToListAsync();
+        }
+
+        public async Task<bool> IsRoomRentedByRenterWihId(Guid roomId, Guid renterId)
+        {
+            var room = await repo.GetByIdAsync<Room>(roomId);
+
+            if (room != null && room.RenterId == renterId)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task LeaveRoomAsync(Guid roomId)
+        {
+            var room = await repo.GetByIdAsync<Room>(roomId);
+            var renter = await repo.GetByIdAsync<Renter>(room.RenterId);
+
+            renter.RoomId = null;
+
+            room.RenterId = null;
+
+
+            await repo.SaveChangesAsync();
         }
     }
 }

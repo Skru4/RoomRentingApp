@@ -189,11 +189,29 @@ namespace RoomRentingApp.Controllers
             return View(model);
         }
 
-        //[HttpPost]
-        //[Authorize(Roles = RenterRole)]
-        //public async Task<IActionResult> Leave(Guid id)
-        //{
+        [HttpPost]
+        [Authorize(Roles = RenterRole)]
+        public async Task<IActionResult> Leave(Guid id)
+        {
+            string userId = User.Id();
+            if (!await roomService.RoomExistAsync(id))
+            {
+                return RedirectToAction(nameof(All));
+            }
 
-        //}
+            if (!await roomService.IsRoomRentedAsync(id))
+            {
+                return RedirectToAction(nameof(All));
+            }
+            var renterId = await renterService.GetRenterIdAsync(userId);
+            if (!await roomService.IsRoomRentedByRenterWihId(id,renterId))
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+            }
+
+            await roomService.LeaveRoomAsync(id);
+            TempData[MessageConstants.SuccessMessage] = SuccessfulLeave;
+            return RedirectToAction(nameof(All));
+        }
     } 
 }

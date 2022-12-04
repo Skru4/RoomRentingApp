@@ -22,15 +22,20 @@
 						<h5 class="card-title mt-1">@room.Description</h5>
 						<p class="mb-0">Address: @room.Address</p>
 						<b>@String.Format("{0:f2}", @room.PricePerWeek) EUR</b>
-
+						<p class="mb-0">
+							Rating: (@if (room.Ratings.RatingDigit > 0)
+							         {
+								         @room.Ratings.RatingDigit
+							         }
+							         else
+							         {
+								         <b>Not rated yet</b>
+							         })
+						</p>
 						<p>Size: @room.Categories.RoomSize</p>
 						<p>L.s.: @room.Categories.LandlordStatus</p>
 						<p>Town: @room.Town</p>
 					</div>
-					@*	<form class="input-group-sm" asp-route-roomId="@Model.Id" asp-controller="Room" asp-action="Info" method="post">
-					<input type="submit" value="Inspect Room" class="fs-6 btn btn-success mb-3 p-2"/>
-				</form>*@
-
 				</div>
 			</div>
 		}

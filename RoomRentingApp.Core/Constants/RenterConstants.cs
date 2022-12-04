@@ -11,5 +11,7 @@
         public const string SuccessfulRentedRoom = "Congrats, You have rented a room!";
 
         public const string NoRentsWarning = "You have not rented room yet";
+
+        public const string SuccessfulLeave = "You have left the room successfuly!";
     }
 }

@@ -47,5 +47,9 @@ namespace RoomRentingApp.Core.Contracts
 
         Task<IEnumerable<AllRoomsViewModel>> GetRoomByLandlordId(Guid landlordId);
 
+        Task<bool> IsRoomRentedByRenterWihId(Guid roomId,Guid renterId);
+
+        Task LeaveRoomAsync(Guid roomId);
+
     }
 }
