@@ -13,7 +13,8 @@ namespace RoomRentingApp.Core.Models.Renter
 
 
         [Required]
-        [Display(Name = "Workplace")]
+        [StringLength(20, MinimumLength = 7)]
+        [Display(Name = "Current Workplace")]
         public string Job { get; set; } = null!;
     }
 }

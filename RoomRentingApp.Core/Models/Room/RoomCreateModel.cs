@@ -12,23 +12,24 @@ namespace RoomRentingApp.Core.Models.Room
         public Guid Id { get; set; } = new Guid();
 
         [Required]
-        [StringLength(70)]
+        [StringLength(70, MinimumLength = 5)]
         public string Address { get; set; } = null!;
 
         [Required]
-        [StringLength(100)]
+        [StringLength(100, MinimumLength = 10)]
         public string Description { get; set; } = null!;
 
         [Required] 
-        [StringLength(150)]
+        [StringLength(150, MinimumLength = 10)]
+        [Display(Name = "Image Url")]
         public string ImageUrl { get; set; } = null!;
 
-        [Column(TypeName = "money")]
+        [Display(Name = "Price per Week")]
         [Precision(18, 2)]
         [Range(0.00, 2000.00, ErrorMessage = "Price per month must be a positive number and less than {2} leva")]
         public decimal PricePerWeek { get; set; }
 
-        [Display(Name = "RoomCategory")]
+        [Display(Name = "Room Category")]
         public int RoomCategoryId { get; set; }
 
         public IEnumerable<RoomCategoryViewModel> RoomCategories { get; set; } = new List<RoomCategoryViewModel>();

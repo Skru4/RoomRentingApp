@@ -22,7 +22,16 @@
 				Price Per Week:
 				<b>@String.Format("{0:f2}", Model.PricePerWeek) EUR</b>
 			</p>
-			<p class="mb-0">Rating: @Model.Ratings.RatingDigit</p>
+			<p class="mb-0">
+				Rating: (@if (Model.Ratings.RatingDigit > 0)
+				        {
+					        @Model.Ratings.RatingDigit
+				        }
+				         else
+				         {
+					         <b>Not rated yet</b>
+				         })
+			</p>
 			<p>Town: @Model.Town</p>
 			<p>Landlord Status: <b>@Model.Categories.LandlordStatus</b></p>
 			<p>Room Size: <b>@Model.Categories.RoomSize</b></p>

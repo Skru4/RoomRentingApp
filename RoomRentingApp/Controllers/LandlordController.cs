@@ -4,6 +4,11 @@ using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Landlord;
 using RoomRentingApp.Extensions;
 
+using static RoomRentingApp.Core.Constants.RenterConstants;
+using static RoomRentingApp.Core.Constants.LandlordConstants;
+using static RoomRentingApp.Core.Constants.UserConstants.Roles;
+using static RoomRentingApp.Core.Constants.UserConstants;
+
 namespace RoomRentingApp.Controllers
 {
     public class LandlordController : BaseController
@@ -27,19 +32,19 @@ namespace RoomRentingApp.Controllers
         {
             if (await landlordService.UserExistByIdAsync(User.Id()))
             {
-                TempData[MessageConstants.ErrorMessage] = "You are already a Landlord";
+                TempData[MessageConstants.ErrorMessage] = AlreadyLandlord;
 
                 return RedirectToAction("Index", "Home");
             }
 
             if (await renterService.UserExistByIdAsync(User.Id()))
             {
-                TempData[MessageConstants.ErrorMessage] = "Renters can't rent-out rooms";
+                TempData[MessageConstants.ErrorMessage] = RentersCantRentOut;
 
                 return RedirectToAction("Index", "Home");
             }
 
-            await roleService.CreateRoleAsync("Landlord");
+            await roleService.CreateRoleAsync(LandlordRole);
 
             var model = new RentOutRoomsModel();
 
@@ -57,27 +62,27 @@ namespace RoomRentingApp.Controllers
             }
             if (await landlordService.UserExistByIdAsync(userId))
             {
-                TempData[MessageConstants.ErrorMessage] = "You are already a Landlord";
+                TempData[MessageConstants.ErrorMessage] = AlreadyLandlord;
 
                 return RedirectToAction("Index", "Home");
             }
 
             if (await landlordService.UserEmailExistAsync(model.Email))
             {
-                TempData[MessageConstants.ErrorMessage] = "This email is already in use";
+                TempData[MessageConstants.ErrorMessage] = EmailAlreadyInUse;
 
                 return RedirectToAction("Index", "Home");
             }
 
             if (await landlordService.UserPhoneNumberExistsAsync(model.PhoneNumber))
             {
-                TempData[MessageConstants.ErrorMessage] = "This phone number is already in use";
+                TempData[MessageConstants.ErrorMessage] = PhoneAlreadyInUse;
 
                 return RedirectToAction("Index", "Home");
             }
             if (await renterService.UserExistByIdAsync(User.Id()))
             {
-                TempData[MessageConstants.ErrorMessage] = "Renters can't rent-out rooms";
+                TempData[MessageConstants.ErrorMessage] = RentersCantRentOut;
 
                 return RedirectToAction("Index", "Home");
             }
@@ -86,9 +91,9 @@ namespace RoomRentingApp.Controllers
 
             var user = await roleService.FindUserByIdAsync(User.Id());
 
-            await roleService.AddToRoleAsync(user, "Landlord");
+            await roleService.AddToRoleAsync(user, LandlordRole);
 
-            TempData[MessageConstants.SuccessMessage] = "You have become a Landlord and now can rent-out your rooms!";
+            TempData[MessageConstants.SuccessMessage] = SuccessfulLandlord;
 
             return RedirectToAction("Index", "Home"); //TODO change when Action is ready
         }

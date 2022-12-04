@@ -5,6 +5,12 @@ using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Extensions;
 
+using static RoomRentingApp.Core.Constants.RenterConstants;
+using static RoomRentingApp.Core.Constants.LandlordConstants;
+using static RoomRentingApp.Core.Constants.UserConstants.Roles;
+using static RoomRentingApp.Core.Constants.UserConstants;
+using static RoomRentingApp.Core.Constants.RoomConstatns;
+
 namespace RoomRentingApp.Controllers
 {
     public class RoomController : BaseController
@@ -30,7 +36,7 @@ namespace RoomRentingApp.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Landlord")]
+        [Authorize(Roles = LandlordRole)]
         public async Task<IActionResult> Add()
         {
             if (!(await landlordService.UserExistByIdAsync(User.Id())))
@@ -47,7 +53,7 @@ namespace RoomRentingApp.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Landlord")]
+        [Authorize(Roles = LandlordRole)]
         public async Task<IActionResult> Add(RoomCreateModel model)
         {
             if (!(await landlordService.UserExistByIdAsync(User.Id())))
@@ -66,9 +72,9 @@ namespace RoomRentingApp.Controllers
 
             Guid roomId = await roomService.CreateRoomAsync(model, landlordId);
 
-            return RedirectToAction(nameof(All), new {roomId}); //TODO CHANGE 
+            TempData[MessageConstants.SuccessMessage] = SuccessfulAddedRoom;
 
-
+            return RedirectToAction(nameof(All), new {roomId});
         }
 
         
@@ -78,11 +84,10 @@ namespace RoomRentingApp.Controllers
 
             var model = await roomService.GetInfoAsync(roomId);
 
-            return View(model);
-           //TODO change when view ready
+            return View(model); 
         }
 
-        [Authorize(Roles ="Renter")]
+        [Authorize(Roles = RenterRole)]
         [HttpPost]
         public async Task<IActionResult> RentRoom(Guid id)
         {
@@ -93,13 +98,14 @@ namespace RoomRentingApp.Controllers
 
             if (await  roomService.IsRoomRentedAsync(id))
             {
-                TempData[MessageConstants.ErrorMessage] = "This room is already rented";
+                TempData[MessageConstants.ErrorMessage] = RoomAlreadyRented;
+
                 return RedirectToAction("All", "Room");
             }
 
             if (await renterService.UserHaveRentsAsync(User.Id()))
             {
-                TempData[MessageConstants.ErrorMessage] = "You can only rent one room";
+                TempData[MessageConstants.ErrorMessage] = OnlyOneRoom;
 
                 return RedirectToAction(nameof(All));
             }
@@ -107,30 +113,30 @@ namespace RoomRentingApp.Controllers
             var renter = await renterService.GetRenterWithUserIdAsync(User.Id());
             await roomService.RentRoomAsync(id, renter.Id);
 
-            TempData[MessageConstants.SuccessMessage] = "Congrats, You have rented a room!";
+            TempData[MessageConstants.SuccessMessage] = SuccessfulRentedRoom;
 
-            return RedirectToAction("All","Room"); //TODO change redirect
+            return RedirectToAction("All","Room");  
         }
 
         [HttpGet]
-        [Authorize(Roles = "Renter")]
+        [Authorize(Roles = RenterRole)]
         public async Task<IActionResult> Rating([FromRoute] Guid Id)
         {
             var model = await roomService.GetRoomByIdAsync(Id);
 
-            ViewData[MessageConstants.WarningMessage] = "Choose rating from 1 to 10";
+            ViewData[MessageConstants.WarningMessage] = RatingInterval;
 
             return View(model);
         }
 
         [HttpPost]
-        [Authorize(Roles = "Renter")]
+        [Authorize(Roles = RenterRole)]
         public async Task<IActionResult> Rating(RatingRoomViewModel model)
         {
            
             await roomService.AddRatingAsync(model);
 
-            TempData[MessageConstants.SuccessMessage] = "Successfully rated room";
+            TempData[MessageConstants.SuccessMessage] = SuccessfulRate;
 
             return RedirectToAction(nameof(All));
         }
