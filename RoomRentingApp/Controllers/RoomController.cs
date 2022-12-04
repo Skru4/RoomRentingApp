@@ -25,6 +25,7 @@ namespace RoomRentingApp.Controllers
             this.renterService = renterService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> All([FromQuery]AllRoomsQueryModel query)
         {
             var result = await roomService.GetAllAsync(
@@ -88,7 +89,7 @@ namespace RoomRentingApp.Controllers
             return RedirectToAction(nameof(All), new {roomId});
         }
 
-        
+        [HttpPost]
         public async Task<IActionResult> Info(Guid roomId)
         {
             var userId = User.Id();
@@ -131,11 +132,11 @@ namespace RoomRentingApp.Controllers
 
         [HttpGet]
         [Authorize(Roles = RenterRole)]
-        public async Task<IActionResult> Rating([FromRoute] Guid Id)
+        public async Task<IActionResult> Rating([FromRoute] Guid id)
         {
-            var model = await roomService.GetRoomByIdAsync(Id);
+            var model = await roomService.GetRoomByIdAsync(id);
 
-            ViewData[MessageConstants.WarningMessage] = RatingInterval;
+            TempData[MessageConstants.WarningMessage] = RatingInterval;
 
             return View(model);
         }
@@ -152,6 +153,47 @@ namespace RoomRentingApp.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        [Authorize(Roles = RenterRole)]
+        public async Task<IActionResult> Rented()
+        {
+            var userId = User.Id();
 
+            if (!await renterService.UserExistByIdAsync(userId))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (!await renterService.UserHaveRentsAsync(userId))
+            {
+                TempData[MessageConstants.WarningMessage] = NoRentsWarning;
+                return RedirectToAction("Index", "Home");
+            }
+            var renterId = await renterService.GetRenterIdAsync(userId);
+            var model = await roomService.GetRoomByRenterId(renterId);
+
+            return View(model);
+        }
+
+        [Authorize(Roles = LandlordRole)]
+        public async Task<IActionResult> Rentals()
+        {
+            var userId = User.Id();
+            if (! await landlordService.UserExistByIdAsync(userId))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
+            var landlordId = await landlordService.GetLandlordIdAsync(userId);
+            var model = await roomService.GetRoomByLandlordId(landlordId);
+
+            return View(model);
+        }
+
+        //[HttpPost]
+        //[Authorize(Roles = RenterRole)]
+        //public async Task<IActionResult> Leave(Guid id)
+        //{
+
+        //}
     } 
 }

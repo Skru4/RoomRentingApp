@@ -9,5 +9,7 @@
         public const string RentersCantRentOut = "Renters can't rent-out rooms";
 
         public const string SuccessfulRentedRoom = "Congrats, You have rented a room!";
+
+        public const string NoRentsWarning = "You have not rented room yet";
     }
 }

@@ -46,6 +46,18 @@
 							<a class="nav-link text-dark" asp-area="" asp-controller="Room" asp-action="Add">Add Room</a>
 						</li>
 					}
+					@if (this.User?.Identity != null && this.User.IsInRole("Renter"))
+					{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Room" asp-action="Rented">Check your room</a>
+							</li>
+					}
+					@if (this.User?.Identity != null && this.User.IsInRole("Landlord"))
+					{
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-controller="Room" asp-action="Rentals">Check your rooms</a>
+						</li>
+					}
 				</ul>
 				<partial name="_LoginPartial"/>
 			</div>

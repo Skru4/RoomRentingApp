@@ -1,0 +1,42 @@
+﻿@model IEnumerable<AllRoomsViewModel>
+
+@{
+	ViewBag.Title = "My Rooms";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+@if (Model.Any())
+{
+	<div class="row">
+		@foreach (var room in Model)
+		{
+			<div class="text-center row">
+				<input type="hidden" asp-for="@room.Id"/>
+				<div class="card col-4" style="width: 20rem;">
+					<img class="card-img-top" style="width: 18rem;"
+				 src="@room.ImageUrl" alt="Room image">
+					<div class="card-body">
+
+						<h5 class="card-title mt-1">@room.Description</h5>
+						<p class="mb-0">Address: @room.Address</p>
+						<b>@String.Format("{0:f2}", @room.PricePerWeek) EUR</b>
+
+						<p>Size: @room.Categories.RoomSize</p>
+						<p>L.s.: @room.Categories.LandlordStatus</p>
+						<p>Town: @room.Town</p>
+					</div>
+					@*	<form class="input-group-sm" asp-route-roomId="@Model.Id" asp-controller="Room" asp-action="Info" method="post">
+					<input type="submit" value="Inspect Room" class="fs-6 btn btn-success mb-3 p-2"/>
+				</form>*@
+
+				</div>
+			</div>
+		}
+	</div>
+}
+else
+{
+	<h3 class="text-center">You have not added rooms yet!</h3>
+}

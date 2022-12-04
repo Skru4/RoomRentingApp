@@ -73,7 +73,7 @@ namespace RoomRentingApp.Core.Services
 
             if (!string.IsNullOrEmpty(town))
             {
-                rooms = rooms.Where(r=>r.Town.Name == town);
+                rooms = rooms.Where(r => r.Town.Name == town);
             }
 
             if (!string.IsNullOrEmpty(searchTerm))
@@ -81,8 +81,8 @@ namespace RoomRentingApp.Core.Services
                 searchTerm = $"%{searchTerm.ToLower()}%";
 
                 rooms = rooms
-                    .Where(r=>EF.Functions.Like(r.Address.ToLower(), searchTerm) ||
-                              EF.Functions.Like(r.Description.ToLower(),searchTerm));
+                    .Where(r => EF.Functions.Like(r.Address.ToLower(), searchTerm) ||
+                              EF.Functions.Like(r.Description.ToLower(), searchTerm));
             }
 
             rooms = sorting switch
@@ -97,12 +97,12 @@ namespace RoomRentingApp.Core.Services
                 .Take(roomsPerPage)
                 .Select(r => new AllRoomServiceModel()
                 {
-                     Address = r.Address,
-                     Id = r.Id,
-                     ImageUrl = r.ImageUrl,
-                     IsRented = r.RenterId != null,
-                     PricePerWeek = r.PricePerWeek,
-                     Description = r.Description
+                    Address = r.Address,
+                    Id = r.Id,
+                    ImageUrl = r.ImageUrl,
+                    IsRented = r.RenterId != null,
+                    PricePerWeek = r.PricePerWeek,
+                    Description = r.Description
                 }).ToListAsync();
 
             result.TotalRoomsCount = await rooms.CountAsync();
@@ -212,7 +212,7 @@ namespace RoomRentingApp.Core.Services
                 RoomCategoryId = model.RoomCategoryId,
                 TownId = model.TownId,
                 Id = model.Id,
-                 
+
             };
 
             await repo.AddAsync(room);
@@ -280,11 +280,67 @@ namespace RoomRentingApp.Core.Services
 
             room.Ratings.Add(new Rating()
             {
-                  RoomId = model.Id,
-                   RatingDigit = rating
+                RoomId = model.Id,
+                RatingDigit = rating
             });
 
-           await repo.SaveChangesAsync();
+            await repo.SaveChangesAsync();
+        }
+
+        public async Task<AllRoomsViewModel> GetRoomByRenterId(Guid renterId)
+        {
+            return await repo.All<Room>()
+                .Where(r => r.RenterId == renterId)
+                .Include(r => r.RoomCategory)
+                .Include(r => r.Town)
+                .Select(r => new AllRoomsViewModel()
+                {
+                    Address = r.Address,
+                    Id = r.Id,
+                    Description = r.Description,
+                    ImageUrl = r.ImageUrl,
+                    PricePerWeek = r.PricePerWeek,
+                    Town = r.Town.Name,
+                    Ratings = new RatingViewModel()
+                    {
+                        RatingDigit = r.Ratings.Any() ? (int)(r.Ratings.Average(s => s.RatingDigit)) : 0
+                    },
+                    Categories = new RoomCategoryViewModel()
+                    {
+                        Id = r.RoomCategory.Id,
+                        LandlordStatus = r.RoomCategory.LandlordStatus,
+                        RoomSize = r.RoomCategory.RoomSize
+                    },
+                    IsRented = r.RenterId != null
+
+                }).FirstAsync();
+        }
+        public async Task<IEnumerable<AllRoomsViewModel>> GetRoomByLandlordId(Guid landlordId)
+        {
+            return await repo.All<Room>()
+                .Where(r => r.RenterId == landlordId)
+                .Include(r => r.RoomCategory)
+                .Include(r => r.Town)
+                .Select(r => new AllRoomsViewModel()
+                {
+                    Address = r.Address,
+                    Id = r.Id,
+                    Description = r.Description,
+                    ImageUrl = r.ImageUrl,
+                    PricePerWeek = r.PricePerWeek,
+                    Town = r.Town.Name,
+                    Ratings = new RatingViewModel()
+                    {
+                        RatingDigit = r.Ratings.Any() ? (int)(r.Ratings.Average(s => s.RatingDigit)) : 0
+                    },
+                    Categories = new RoomCategoryViewModel()
+                    {
+                        Id = r.RoomCategory.Id,
+                        LandlordStatus = r.RoomCategory.LandlordStatus,
+                        RoomSize = r.RoomCategory.RoomSize
+                    },
+                    IsRented = r.RenterId != null
+                }).ToListAsync();
         }
     }
 }

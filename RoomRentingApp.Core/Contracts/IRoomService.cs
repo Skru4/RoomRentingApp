@@ -43,5 +43,9 @@ namespace RoomRentingApp.Core.Contracts
 
         Task AddRatingAsync(RatingRoomViewModel model);
 
+        Task<AllRoomsViewModel> GetRoomByRenterId(Guid renterId);
+
+        Task<IEnumerable<AllRoomsViewModel>> GetRoomByLandlordId(Guid landlordId);
+
     }
 }
