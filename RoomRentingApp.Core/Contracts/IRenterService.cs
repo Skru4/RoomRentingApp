@@ -1,4 +1,5 @@
-﻿using RoomRentingApp.Infrastructure.Models;
+﻿using RoomRentingApp.Core.Models.Landlord;
+using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Core.Contracts
 {

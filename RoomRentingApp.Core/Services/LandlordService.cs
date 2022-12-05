@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RoomRentingApp.Core.Contracts;
+using RoomRentingApp.Core.Models.Landlord;
+using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
 
@@ -45,9 +47,31 @@ namespace RoomRentingApp.Core.Services
         public async Task<Guid> GetLandlordIdAsync(string userId)
         {
             return (await repo.AllReadonly<Landlord>()
-                .FirstOrDefaultAsync(l => l.UserId == userId)).Id;
+                .FirstAsync(l => l.UserId == userId)).Id;
         }
 
-        
+        public async Task<IEnumerable<AllLandlordsViewModel>> GetAllLandlordsAsync()
+        {
+            var result = await repo.All<Landlord>()
+                .Include(l => l.RoomsToRent)
+                .Select(l => new AllLandlordsViewModel()
+                {
+                    Id = l.Id,
+                    FirstName = l.FirstName,
+                    LastName = l.LastName,
+                    PhoneNumber = l.PhoneNumber,
+                    Rooms = l.RoomsToRent.Select(x => new AllRoomServiceModel()
+                    {
+                        Address = x.Address,
+                        Description = x.Description,
+                        Id = x.Id,
+                        ImageUrl = x.ImageUrl,
+                        PricePerWeek = x.PricePerWeek,
+                        IsRented = x.RenterId != null
+                    }),
+                }).ToListAsync();
+
+            return result;
+        }
     }
 }

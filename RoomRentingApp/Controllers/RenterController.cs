@@ -88,5 +88,12 @@ namespace RoomRentingApp.Controllers
 
             return RedirectToAction("All", "Room"); //TODO change when Action is ready
         }
+
+        public async Task<IActionResult> Contacts()
+        {
+            var model = await landlordService.GetAllLandlordsAsync();
+
+            return View(model);
+        }
     }
 }

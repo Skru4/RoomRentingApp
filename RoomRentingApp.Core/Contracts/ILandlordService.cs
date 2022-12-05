@@ -1,4 +1,5 @@
-﻿using RoomRentingApp.Infrastructure.Models;
+﻿using RoomRentingApp.Core.Models.Landlord;
+using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Core.Contracts
 {
@@ -13,6 +14,8 @@ namespace RoomRentingApp.Core.Contracts
         Task CreateNewLandlordAsync(string userId, string phoneNumber, string fistName, string lastName);
 
         Task<Guid> GetLandlordIdAsync(string userId);
+
+        Task<IEnumerable<AllLandlordsViewModel>> GetAllLandlordsAsync();
 
     }
 }

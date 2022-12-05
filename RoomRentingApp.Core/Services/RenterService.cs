@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RoomRentingApp.Core.Contracts;
+using RoomRentingApp.Core.Models.Landlord;
+using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
 
@@ -59,7 +61,7 @@ namespace RoomRentingApp.Core.Services
         public async Task<Guid> GetRenterIdAsync(string userId)
         {
             return (await repo.AllReadonly<Renter>()
-                .FirstOrDefaultAsync(r => r.UserId == userId)).Id;
+                .FirstAsync(r => r.UserId == userId)).Id;
         }
     }
 }
