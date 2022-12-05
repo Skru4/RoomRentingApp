@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Ganss.Xss;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoomRentingApp.Core.Constants;
 using RoomRentingApp.Core.Contracts;
@@ -80,6 +81,14 @@ namespace RoomRentingApp.Controllers
                 return View(model); 
             }
 
+            string sanitizedAddress = this.SanitizeString(model.Address);
+            string sanitizedDescription = this.SanitizeString(model.Description);
+
+            if (string.IsNullOrEmpty(sanitizedAddress) || string.IsNullOrEmpty(sanitizedDescription))
+            {
+                TempData[MessageConstants.ErrorMessage] = DoNotCheat;
+                return View(model);
+            }
             Guid landlordId = await landlordService.GetLandlordIdAsync(User.Id());
 
             Guid roomId = await roomService.CreateRoomAsync(model, landlordId);
@@ -170,6 +179,15 @@ namespace RoomRentingApp.Controllers
             var renterId = await renterService.GetRenterIdAsync(userId);
             var model = await roomService.GetRoomByRenterId(renterId);
 
+            string sanitizedAddress = this.SanitizeString(model.Address);
+            string sanitizedDescription = this.SanitizeString(model.Description);
+
+            if (string.IsNullOrEmpty(sanitizedAddress) || string.IsNullOrEmpty(sanitizedDescription))
+            {
+                TempData[MessageConstants.ErrorMessage] = DoNotCheat;
+                return View(model);
+            }
+
             return View(model);
         }
 
@@ -211,6 +229,15 @@ namespace RoomRentingApp.Controllers
             await roomService.LeaveRoomAsync(id);
             TempData[MessageConstants.SuccessMessage] = SuccessfulLeave;
             return RedirectToAction(nameof(All));
+        }
+
+
+
+        private string SanitizeString(string content)
+        {
+            HtmlSanitizer sanitizer = new HtmlSanitizer();
+
+            return sanitizer.Sanitize(content);
         }
     } 
 }

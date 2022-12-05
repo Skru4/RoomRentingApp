@@ -19,7 +19,8 @@ namespace RoomRentingApp.Core.Models.Room
         [StringLength(100, MinimumLength = 10)]
         public string Description { get; set; } = null!;
 
-        [Required] 
+        [Required]
+        [Url]
         [StringLength(150, MinimumLength = 10)]
         [Display(Name = "Image Url")]
         public string ImageUrl { get; set; } = null!;

@@ -12,5 +12,7 @@
 
         public const string SuccessfulRate = "Successfully rated room";
 
+        public const string DoNotCheat = "Don't try to XXS, please";
+
     }
 }
