@@ -89,7 +89,6 @@ namespace RoomRentingApp.Controllers
             return RedirectToAction(nameof(All), new {roomId});
         }
 
-        [HttpPost]
         public async Task<IActionResult> Info(Guid roomId)
         {
             var userId = User.Id();

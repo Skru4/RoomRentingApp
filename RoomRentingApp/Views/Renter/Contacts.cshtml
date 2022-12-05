@@ -11,56 +11,23 @@
 	
 @foreach (var user in Model)
 {
-	<div class="col">
-		<div class="row-4">
-			<div class="py-5">
-				<div class="container">
-					<div class="row hidden-md-up">
-						<div class="col-md-4">
-							<div class="card">
-								<div class="card-block">
-									<h4 class="card-title">Name: @user.FirstName @user.LastName</h4>
-									<h6 class="card-subtitle text-muted">Landlord</h6>
-									<p class="card-text p-y-1">Phone number: <b>@user.PhoneNumber</b></p>
-									<p>Number of added rooms: <b>@user.Rooms.Count()</b></p>
-									<p>
-										@foreach (var room in user.Rooms)
-										{
-										<p>Address: @room.Address // Room status: <b>@(@room.IsRented ? "Rented" : "Free")</b></p>
-										}
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+	<div class="row">
+	<div class="col-sm-6" style="margin:auto">
+		<div class="card" style="margin-bottom:25px">
+			<div class="card-body">
+				<h5 class="card-title">Name: @user.FirstName @user.LastName</h5>
+					<h6 class="card-subtitle text-muted">Landlord</h6>
+					<p class="card-text">Phone number: <b>@user.PhoneNumber</b></p>
+					<p class="card-text">Number of added rooms: <b>@user.Rooms.Count()</b></p>
+					<p class="card-text">@foreach (var room in user.Rooms)
+				      {
+				       <p>Address: @room.Address / Room status: <b>@(@room.IsRented ? "Rented" : "Free")</b>
+				        <a asp-controller="Room" asp-action="Info" asp-route-roomId="@room.Id" class="btn btn-primary">Check</a> </p>
+				       
+				      }
+					
 			</div>
 		</div>
-		
-		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
-		<script src="https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.min.js"></script>
 	</div>
-
-@*	<div class="row">
-		<div class="container" style="display:inline">
-			<div class="col-4"> @user.FirstName @user.LastName
-			</div>
-			<div class="card col-8 border-0">
-				<p style="font-size: 25px;">Phone: <u>@user.PhoneNumber</u></p>
-				<p>Rooms count: <b>@user.Rooms.Count()</b></p>
-				<p>
-					@foreach (var room in user.Rooms)
-					{
-						<p>Room Address: @room.Address // Room status: @(@room.IsRented ? "Rented":"Free")</p>
-					}
-				</p>
-	
-			</div>
-		</div>
-
-	</div>*@
-
-
-
+	</div>
 }
