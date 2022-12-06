@@ -14,5 +14,9 @@
 
         public const string DoNotCheat = "Don't try to XXS, please";
 
+        public const string RoomDeleted = "Successfuly deleted room";
+
+        public const string CannotDeleteRoom = "You cannot delete this room becouse it is Rented!";
+
     }
 }

@@ -49,7 +49,11 @@ namespace RoomRentingApp.Core.Contracts
 
         Task<bool> IsRoomRentedByRenterWihId(Guid roomId,Guid renterId);
 
+        Task<bool> IsRoomAddedByLandlordWithId(Guid roomId, Guid landlordId);
+
         Task LeaveRoomAsync(Guid roomId);
+
+        Task DeleteRoomAsync(Guid roomId);
 
     }
 }

@@ -8,6 +8,7 @@ using RoomRentingApp.Extensions;
 using static RoomRentingApp.Core.Constants.RenterConstants;
 using static RoomRentingApp.Core.Constants.RoomConstatns;
 using static RoomRentingApp.Core.Constants.UserConstants.Roles;
+using static RoomRentingApp.Core.Constants.LandlordConstants;
 
 namespace RoomRentingApp.Controllers
 {
@@ -230,6 +231,36 @@ namespace RoomRentingApp.Controllers
             TempData[MessageConstants.SuccessMessage] = SuccessfulLeave;
             return RedirectToAction(nameof(All));
         }
+
+        [HttpPost]
+        [Authorize(Roles = LandlordRole)]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            string userId = User.Id();
+            var landlordId = await landlordService.GetLandlordIdAsync(userId);
+            if (!await roomService.RoomExistAsync(id))
+            {
+                return RedirectToAction(nameof(Rentals));
+            }
+
+            if (await roomService.IsRoomRentedAsync(id))
+            {
+                TempData[MessageConstants.ErrorMessage] = CannotDeleteRoom;
+                return RedirectToAction(nameof(Rentals));
+            }
+
+            if (!await roomService.IsRoomAddedByLandlordWithId(id, landlordId))
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+            }
+
+            await roomService.DeleteRoomAsync(id);
+
+            TempData[MessageConstants.SuccessMessage] = RoomDeleted;
+
+            return RedirectToAction(nameof(Rentals));
+        }
+
 
 
 

@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RoomRentingApp.Infrastructure.Models;
 using RoomRentingApp.Models;
 using System.Diagnostics;
-using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Controllers
 {
@@ -21,10 +21,10 @@ namespace RoomRentingApp.Controllers
         {
             if (!this.User.Identity!.IsAuthenticated)
             {
-                return this.View();
+                return View();
             }
 
-            ApplicationUser user = this.userManager.GetUserAsync(this.User).Result;
+            ApplicationUser user = userManager.GetUserAsync(this.User).Result;
             string username = user.UserName;
             string? firstName = user.FirstName;
             string? lastName = user.LastName;

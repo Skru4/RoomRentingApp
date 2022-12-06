@@ -23,6 +23,7 @@ namespace RoomRentingApp.Core.Services
         public async Task<IEnumerable<AllRoomsViewModel>> GetAllRoomsAsync()
         {
             var rooms = await repo.All<Room>()
+                .Where(r => r.IsActive)
                 .Include(r => r.RoomCategory)
                 .Include(r => r.Town)
                 .Include(r => r.Ratings)
@@ -59,7 +60,8 @@ namespace RoomRentingApp.Core.Services
             RoomSorting sorting = RoomSorting.Price, int currentPage = 1, int roomsPerPage = 1)
         {
             var result = new RoomsQueryModel();
-            var rooms = repo.AllReadonly<Room>();
+            var rooms = repo.AllReadonly<Room>()
+                .Where(r => r.IsActive);
 
             if (!string.IsNullOrEmpty(categoryStatus))
             {
@@ -94,6 +96,7 @@ namespace RoomRentingApp.Core.Services
             };
 
             result.Rooms = await rooms
+                .Where(r=>r.IsActive)
                 .Skip((currentPage - 1) * roomsPerPage)
                 .Take(roomsPerPage)
                 .Select(r => new AllRoomServiceModel()
@@ -162,6 +165,7 @@ namespace RoomRentingApp.Core.Services
         {
             var room = await repo.All<Room>()
                 .Where(r => r.Id == roomId)
+                .Where(r => r.IsActive)
                 .Include(r => r.Town)
                 .Include(r => r.RoomCategory)
                 .Select(r => new AllRoomsViewModel()
@@ -213,6 +217,7 @@ namespace RoomRentingApp.Core.Services
                 RoomCategoryId = model.RoomCategoryId,
                 TownId = model.TownId,
                 Id = model.Id,
+                IsActive = true
 
             };
 
@@ -248,6 +253,7 @@ namespace RoomRentingApp.Core.Services
         public async Task<bool> RoomExistAsync(Guid roomId)
         {
             return await repo.AllReadonly<Room>()
+                .Where(r => r.IsActive)
                 .AnyAsync(r => r.Id == roomId);
         }
 
@@ -292,6 +298,7 @@ namespace RoomRentingApp.Core.Services
         {
             return await repo.All<Room>()
                 .Where(r => r.RenterId == renterId)
+                .Where(r => r.IsActive)
                 .Include(r => r.RoomCategory)
                 .Include(r => r.Town)
                 .Select(r => new AllRoomsViewModel()
@@ -319,7 +326,8 @@ namespace RoomRentingApp.Core.Services
         public async Task<IEnumerable<AllRoomsViewModel>> GetRoomByLandlordId(Guid landlordId)
         {
             return await repo.All<Room>()
-                .Where(r => r.RenterId == landlordId)
+                .Where(r => r.LandlordId == landlordId)
+                .Where(r=>r.IsActive)
                 .Include(r => r.RoomCategory)
                 .Include(r => r.Town)
                 .Select(r => new AllRoomsViewModel()
@@ -340,7 +348,8 @@ namespace RoomRentingApp.Core.Services
                         LandlordStatus = r.RoomCategory.LandlordStatus,
                         RoomSize = r.RoomCategory.RoomSize
                     },
-                    IsRented = r.RenterId != null
+                    IsRented = r.RenterId != null,
+                    
                 }).ToListAsync();
         }
 
@@ -356,6 +365,17 @@ namespace RoomRentingApp.Core.Services
             return false;
         }
 
+        public async Task<bool> IsRoomAddedByLandlordWithId(Guid roomId, Guid landlordId)
+        {
+            var room = await repo.GetByIdAsync<Room>(roomId);
+
+            if (room!= null && room.LandlordId == landlordId)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task LeaveRoomAsync(Guid roomId)
         {
             var room = await repo.GetByIdAsync<Room>(roomId);
@@ -365,6 +385,14 @@ namespace RoomRentingApp.Core.Services
 
             room.RenterId = null;
 
+
+            await repo.SaveChangesAsync();
+        }
+
+        public async Task DeleteRoomAsync(Guid roomId)
+        {
+            var room = await repo.GetByIdAsync<Room>(roomId);
+            room.IsActive = false;
 
             await repo.SaveChangesAsync();
         }
