@@ -46,5 +46,7 @@ namespace RoomRentingApp.Infrastructure.Models
         public Town Town { get; set; } = null!;
 
         public ICollection<Rating> Ratings { get; set; }
+
+        public bool IsActive { get; set; } = true;
     }
 }
