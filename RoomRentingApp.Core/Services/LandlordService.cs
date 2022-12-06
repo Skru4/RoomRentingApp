@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Landlord;
 using RoomRentingApp.Core.Models.Room;
@@ -72,6 +73,13 @@ namespace RoomRentingApp.Core.Services
                 }).ToListAsync();
 
             return result;
+        }
+
+        public async Task<Landlord> GetLandlordWithUserIdAsync(string userId)
+        {
+            return await repo.All<Landlord>()
+                .Where(l => l.UserId == userId)
+                .FirstAsync();
         }
     }
 }

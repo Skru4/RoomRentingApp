@@ -1,33 +1,47 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RoomRentingApp.Core.Contracts;
+using RoomRentingApp.Core.Services;
 using RoomRentingApp.Infrastructure.Models;
 using RoomRentingApp.Models;
 using System.Diagnostics;
+using static RoomRentingApp.Core.Constants.UserConstants.Roles;
 
 namespace RoomRentingApp.Controllers
 {
     public class HomeController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly ILandlordService landlordService;
 
-        public HomeController(UserManager<ApplicationUser> userManager)
+        public HomeController(UserManager<ApplicationUser> userManager,
+            ILandlordService landlordService)
         {
             this.userManager = userManager;
+            this.landlordService = landlordService;
         }
 
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (!this.User.Identity!.IsAuthenticated)
             {
                 return View();
             }
 
-            ApplicationUser user = userManager.GetUserAsync(this.User).Result;
+            ApplicationUser user = userManager.GetUserAsync(User).Result;
             string username = user.UserName;
             string? firstName = user.FirstName;
             string? lastName = user.LastName;
+
+            if (User.IsInRole(LandlordRole))
+            {
+                var landlord = await landlordService.GetLandlordWithUserIdAsync(user.Id);
+
+                 firstName = landlord.FirstName;
+                 lastName = landlord.LastName;
+            }
 
             if (firstName == null && lastName == null)
             {

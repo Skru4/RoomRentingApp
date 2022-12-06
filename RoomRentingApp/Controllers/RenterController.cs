@@ -86,7 +86,7 @@ namespace RoomRentingApp.Controllers
 
             TempData[MessageConstants.SuccessMessage] = SuccessfulRenter;
 
-            return RedirectToAction("All", "Room"); //TODO change when Action is ready
+            return RedirectToAction("All", "Room");
         }
 
         [HttpGet]

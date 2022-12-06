@@ -17,5 +17,7 @@ namespace RoomRentingApp.Core.Contracts
 
         Task<IEnumerable<AllLandlordsViewModel>> GetAllLandlordsAsync();
 
+        Task<Landlord> GetLandlordWithUserIdAsync(string userId);
+
     }
 }

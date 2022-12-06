@@ -95,7 +95,7 @@ namespace RoomRentingApp.Controllers
 
             TempData[MessageConstants.SuccessMessage] = SuccessfulLandlord;
 
-            return RedirectToAction("Index", "Home"); //TODO change when Action is ready
+            return RedirectToAction("Index", "Home");
         }
     }
 }
