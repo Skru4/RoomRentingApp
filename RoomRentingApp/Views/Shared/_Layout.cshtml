@@ -14,7 +14,7 @@
 <body>
 <partial name="_UserMessages" />	
 <header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar navbar-dark bg-primary border-bottom box-shadow mb-3">
+	<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar navbar-dark bg-primary border-bottom box-shadow mb-3">
 		<div class="container-fluid">
 			<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RoomRentingApp</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -29,14 +29,14 @@
 
 					@if (this.User?.Identity != null && this.User.Identity.IsAuthenticated)
 					{
-						<li class="nav-item" >
-								<a class="nav-link text-light" asp-area="" asp-controller="Landlord" asp-action="RentOut"><b>Start Renting-Out</b></a>
-								
+						<li class="nav-item">
+							<a class="nav-link text-light" asp-area="" asp-controller="Landlord" asp-action="RentOut"><b>Start Renting-Out</b></a>
+
 						</li>
 						<li class="nav-item">
-								<a class="nav-link text-light" asp-area="" asp-controller="Renter" asp-action="Rent"><b>Look for rooms</b></a>
+							<a class="nav-link text-light" asp-area="" asp-controller="Renter" asp-action="Rent"><b>Look for rooms</b></a>
 						</li>
-							<li class="nav-item ms-auto">
+						<li class="nav-item ms-auto">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Room" asp-action="All">All Rooms</a>
 						</li>
 						<li class="nav-item">
@@ -51,9 +51,9 @@
 					}
 					@if (this.User?.Identity != null && this.User.IsInRole("Renter"))
 					{
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Room" asp-action="Rented">Check your room</a>
-							</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-controller="Room" asp-action="Rented">Check your room</a>
+						</li>
 					}
 					@if (this.User?.Identity != null && this.User.IsInRole("Landlord"))
 					{
@@ -67,15 +67,17 @@
 		</div>
 	</nav>
 </header>
+
 <div class="container">
 	<main role="main" class="pb-3">
 		@RenderBody()
 	</main>
 </div>
 
-<footer class="border-top footer text-muted">
-	<div class="container">
-		&copy; 2022 - RoomRentingApp
+	<footer class="border-top footer text-muted" style="background-color:dodgerblue;">
+		<div class="container d-flex justify-content-center py-2" style="background-color: rgba(0, 0, 0, 0.2);">
+			<a style="color:burlywood"> © 2022 Copyright: </a>
+			<a class="text-white"> Room-Renting-App</a>
 	</div>
 </footer>
 
