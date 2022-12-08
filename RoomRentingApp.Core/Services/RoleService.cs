@@ -4,6 +4,8 @@ using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
 
+using static RoomRentingApp.Core.Constants.UserConstants.Roles;
+
 namespace RoomRentingApp.Core.Services
 {
     public class RoleService : IRoleService
@@ -37,9 +39,22 @@ namespace RoomRentingApp.Core.Services
         public async Task<ApplicationUser> FindUserByIdAsync(string userId)
         {
             var user = await repo.All<ApplicationUser>()
-                .FirstOrDefaultAsync(u => u.Id == userId);
+                .FirstAsync(u => u.Id == userId);
 
             return user;
+        }
+
+        public async Task<bool> IsInRoleAdmin(string userId)
+        {
+            var user = await repo.All<ApplicationUser>()
+                .Where(u => u.Id == userId)
+                .FirstAsync();
+
+            if (await userManager.IsInRoleAsync(user, AdministratorRole))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

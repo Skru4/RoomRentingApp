@@ -43,6 +43,12 @@ namespace RoomRentingApp.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
+            if (await roleService.IsInRoleAdmin(User.Id()))
+            {
+                TempData[MessageConstants.ErrorMessage] = CannotBeLandlord;
+
+                return RedirectToAction("Index", "Home");
+            }
 
             await roleService.CreateRoleAsync(LandlordRole);
 

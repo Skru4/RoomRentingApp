@@ -1,4 +1,5 @@
 ﻿using RoomRentingApp.Infrastructure.Models;
+using System.Runtime.CompilerServices;
 
 namespace RoomRentingApp.Core.Contracts
 {
@@ -9,5 +10,7 @@ namespace RoomRentingApp.Core.Contracts
         Task AddToRoleAsync(ApplicationUser user,string roleName);
 
         Task<ApplicationUser> FindUserByIdAsync(string userId);
+
+        Task<bool> IsInRoleAdmin(string userId);
     }
 }
