@@ -1,0 +1,43 @@
+﻿@model IEnumerable<RenterServiceModel>
+
+@{
+	ViewData["Title"] = "All Renters";
+}
+
+<h3 class="mb-3">@ViewData["Title"]</h3>
+<div class="row">
+	<div class="table-responsive">
+		<table class="table table-hover table-striped table-dark">
+			<thead>
+				<tr class="table-primary">
+					<th scope="col">Email</th>
+					<th scope="col">Phone Number</th>
+					<th scope="col">Occupation</th>
+					<th scope="col">Have rented room</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var renter in Model)
+				{
+					<tr>
+						<th scope="row">@renter.User.Email</th>
+						<td>@renter.PhoneNumber</td>
+						<td>@renter.Job</td>
+						<td>
+							@if (renter.RoomId != null)
+							{
+								<label>✔</label>
+							}
+							else
+							{
+								<label class="text-center">❌</label>
+							}
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+

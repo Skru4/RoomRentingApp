@@ -1,0 +1,41 @@
+﻿@model IEnumerable<RoomServiceModel>
+
+@{
+	ViewData["Title"] = "All Rooms";
+}
+
+<h3 class="mb-3">@ViewData["Title"]</h3>
+<div class="row">
+	<div class="table-responsive">
+		<table class="table table-hover table-striped table-dark">
+			<thead>
+			<tr class="table-primary">
+				<th scope="col">Address</th>
+				<th scope="col">Description</th>
+				<th scope="col">Town Name</th>
+				<th scope="col">Created By</th>
+				<th scope="col">Price</th>
+				<th scope="col">Landlord-Status</th>
+				<th scope="col">Room Size</th>
+				<th scope="col">Image Link</th>
+			</tr>
+			</thead>
+			<tbody>
+			@foreach (var room in Model)
+			{
+				<tr>
+					<th scope="row">@room.Address</th>
+					<td>@room.Description</td>
+					<td>@room.Town.Name</td>
+					<td>@room.Landlord.FirstName @room.Landlord.LastName</td>
+					<td>@room.PricePerWeek</td>
+					<td>@room.RoomCategory.LandlordStatus</td>
+					<td>@room.RoomCategory.RoomSize</td>
+					<td>@room.ImageUrl</td>
+				</tr>
+			}
+			</tbody>
+		</table>
+	</div>
+</div>
+

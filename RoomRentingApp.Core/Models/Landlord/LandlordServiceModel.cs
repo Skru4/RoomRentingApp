@@ -20,6 +20,6 @@ namespace RoomRentingApp.Core.Models.Landlord
 
         public ApplicationUser User { get; set; } 
 
-        public ICollection<RoomServiceModel> RoomsToRent { get; set; }
+        public IEnumerable<RoomServiceModel> RoomsToRent { get; set; }
     }
 }

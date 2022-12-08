@@ -30,6 +30,11 @@ namespace RoomRentingApp.Controllers
                 return View();
             }
 
+            if (User.IsInRole(AdministratorRole))
+            {
+                return RedirectToAction("Index", "Home", new {area = "Admin"});
+            }
+
             ApplicationUser user = userManager.GetUserAsync(User).Result;
             string username = user.UserName;
             string? firstName = user.FirstName;

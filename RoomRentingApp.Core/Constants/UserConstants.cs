@@ -10,6 +10,7 @@
             public const string Administrator = "Administrator";
             public const string RenterRole = "Renter";
             public const string LandlordRole = "Landlord";
+            public const string AdministratorRole = "Administrator";
         }
     }
 }

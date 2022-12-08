@@ -37,7 +37,9 @@ builder.Services.
     .AddScoped<IRoomService, RoomService>()
     .AddScoped<ILandlordService, LandlordService>()
     .AddScoped<IRenterService, RenterService>()
-    .AddScoped<IRoleService, RoleService>();
+    .AddScoped<IRoleService, RoleService>()
+     .AddScoped<IAdminService,AdminService>();
+     
     
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -64,6 +66,10 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "Area",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",
