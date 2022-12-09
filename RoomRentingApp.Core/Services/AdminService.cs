@@ -61,6 +61,10 @@ namespace RoomRentingApp.Core.Services
                         LandlordStatus = r.RoomCategory.LandlordStatus,
                         RoomSize = r.RoomCategory.RoomSize,
                     }
+                    ,Ratings = r.Ratings.Select(t=> new Models.Rating.RatingServiceModel()
+                    {
+                         RatingDigit = t.RatingDigit
+                    })
                 })
                 .ToListAsync();
             return allRooms;

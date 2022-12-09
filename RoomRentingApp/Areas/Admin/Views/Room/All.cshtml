@@ -19,6 +19,8 @@
 				<th scope="col">Room Size</th>
 				<th scope="col">Image Link</th>
 				<th scope="col">Room status</th>
+				<th scope="col">Average Rating</th>
+				<th scope="col">Number of votes</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -43,6 +45,17 @@
 							<p>Free</p>
 						}
 					</td>
+					<td>
+						@if (room.Ratings.Any())
+						{
+							<label>@room.Ratings.Average(r=>r.RatingDigit)</label>
+						}
+						else
+						{
+							<label>Not rated yet</label>
+						}
+					</td>
+						<td>@room.Ratings.Count()</td>
 				</tr>
 			}
 			</tbody>

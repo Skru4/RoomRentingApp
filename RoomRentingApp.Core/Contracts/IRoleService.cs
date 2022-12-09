@@ -18,5 +18,7 @@ namespace RoomRentingApp.Core.Contracts
         Task<bool> IsInRoleLandlord(string userId);
 
         Task DeleteUserAsync(ApplicationUser user);
+
+        Task SinOutAndInUserAsync(ApplicationUser user);
     }
 }

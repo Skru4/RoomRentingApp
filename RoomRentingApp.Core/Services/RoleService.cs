@@ -12,15 +12,18 @@ namespace RoomRentingApp.Core.Services
     {
 
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IRepository repo;
 
-        public RoleService(RoleManager<IdentityRole> roleManager, 
-            UserManager<ApplicationUser> userManager, 
+        public RoleService(RoleManager<IdentityRole> roleManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             IRepository repo)
         {
-            this.roleManager =  roleManager;
+            this.roleManager = roleManager;
             this.userManager = userManager;
+            this.signInManager = signInManager;
             this.repo = repo;
         }
         public async Task CreateRoleAsync(string roleName)
@@ -33,7 +36,7 @@ namespace RoomRentingApp.Core.Services
 
         public async Task AddToRoleAsync(ApplicationUser user, string roleName)
         {
-            await userManager.AddToRoleAsync(user, roleName); 
+            await userManager.AddToRoleAsync(user, roleName);
 
         }
         public async Task<ApplicationUser> FindUserByIdAsync(string userId)
@@ -87,7 +90,13 @@ namespace RoomRentingApp.Core.Services
         {
             await userManager.DeleteAsync(user);
 
-            
+
+        }
+
+        public async Task SinOutAndInUserAsync(ApplicationUser user)
+        {
+            await signInManager.SignOutAsync();
+            await signInManager.SignInAsync(user, isPersistent: false);
         }
     }
 }

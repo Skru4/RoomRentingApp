@@ -18,7 +18,6 @@ namespace RoomRentingApp.Controllers
         private readonly ILandlordService landlordService;
         private readonly IRenterService renterService;
         private readonly IRoleService roleService;
-        private readonly SignInManager<ApplicationUser> signInManager;
 
 
         public LandlordController(ILandlordService landlordService,
@@ -29,7 +28,6 @@ namespace RoomRentingApp.Controllers
             this.landlordService = landlordService;
             this.renterService = renterService;
             this.roleService = roleService;
-            this.signInManager = signInManager;
         }
 
         [HttpGet]
@@ -103,8 +101,8 @@ namespace RoomRentingApp.Controllers
             var user = await roleService.FindUserByIdAsync(User.Id());
 
             await roleService.AddToRoleAsync(user, LandlordRole);
-            await signInManager.SignOutAsync();
-            await signInManager.SignInAsync(user, isPersistent: false);
+
+            await roleService.SinOutAndInUserAsync(user);
 
             TempData[MessageConstants.SuccessMessage] = SuccessfulLandlord;
 
