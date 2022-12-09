@@ -63,5 +63,12 @@ namespace RoomRentingApp.Core.Services
             return (await repo.AllReadonly<Renter>()
                 .FirstAsync(r => r.UserId == userId)).Id;
         }
+
+        public async Task<Renter> GetRenterWithRenterId(Guid? renterId)
+        {
+            return await repo.All<Renter>()
+                .Where(r => r.Id == renterId)
+                .FirstOrDefaultAsync();
+        }
     }
 }

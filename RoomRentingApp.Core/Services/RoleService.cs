@@ -12,12 +12,12 @@ namespace RoomRentingApp.Core.Services
     {
 
         private readonly RoleManager<IdentityRole> roleManager;
-
         private readonly UserManager<ApplicationUser> userManager;
-
         private readonly IRepository repo;
 
-        public RoleService(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IRepository repo)
+        public RoleService(RoleManager<IdentityRole> roleManager, 
+            UserManager<ApplicationUser> userManager, 
+            IRepository repo)
         {
             this.roleManager =  roleManager;
             this.userManager = userManager;
@@ -52,9 +52,42 @@ namespace RoomRentingApp.Core.Services
 
             if (await userManager.IsInRoleAsync(user, AdministratorRole))
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
+        }
+
+        public async Task<bool> IsInRoleRenter(string userId)
+        {
+            var user = await repo.All<ApplicationUser>()
+                .Where(u => u.Id == userId)
+                .FirstAsync();
+
+            if (await userManager.IsInRoleAsync(user, RenterRole))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> IsInRoleLandlord(string userId)
+        {
+            var user = await repo.All<ApplicationUser>()
+                .Where(u => u.Id == userId)
+                .FirstAsync();
+
+            if (await userManager.IsInRoleAsync(user, LandlordRole))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task DeleteUserAsync(ApplicationUser user)
+        {
+            await userManager.DeleteAsync(user);
+
+            
         }
     }
 }

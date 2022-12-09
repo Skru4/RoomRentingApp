@@ -8,6 +8,8 @@ using static RoomRentingApp.Core.Constants.RenterConstants;
 using static RoomRentingApp.Core.Constants.LandlordConstants;
 using static RoomRentingApp.Core.Constants.UserConstants.Roles;
 using static RoomRentingApp.Core.Constants.UserConstants;
+using Microsoft.AspNetCore.Identity;
+using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Controllers
 {
@@ -16,14 +18,17 @@ namespace RoomRentingApp.Controllers
         private readonly IRenterService renterService;
         private readonly ILandlordService landlordService;
         private readonly IRoleService roleService;
+        private readonly SignInManager<ApplicationUser> signInManager;
 
         public RenterController(IRenterService renterService,
             ILandlordService landlordService, 
-            IRoleService roleService)
+            IRoleService roleService,
+            SignInManager<ApplicationUser> signInManager)
         {
             this.renterService = renterService;
             this.landlordService = landlordService;
             this.roleService = roleService;
+            this.signInManager = signInManager;
         }
 
         [HttpGet]
@@ -90,6 +95,9 @@ namespace RoomRentingApp.Controllers
             var user = await roleService.FindUserByIdAsync(User.Id());
 
             await roleService.AddToRoleAsync(user, RenterRole);
+
+            await signInManager.SignOutAsync();
+            await signInManager.SignInAsync(user, isPersistent: false);
 
             TempData[MessageConstants.SuccessMessage] = SuccessfulRenter;
 

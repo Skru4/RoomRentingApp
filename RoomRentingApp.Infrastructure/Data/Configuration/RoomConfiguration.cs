@@ -9,6 +9,15 @@ namespace RoomRentingApp.Infrastructure.Data.Configuration
         public void Configure(EntityTypeBuilder<Room> builder)
         {
             builder.HasData(CreateRooms());
+
+            //builder.HasOne(r => r.Landlord)
+            //    .WithMany(r => r.RoomsToRent)
+            //    .HasForeignKey(r => r.LandlordId)
+            //    .OnDelete(DeleteBehavior.Cascade);
+            //builder.HasOne(r => r.Renter)
+            //    .WithOne(c => c.Room)
+            //    .HasForeignKey<Renter>(c => c.RoomId)
+            //    .OnDelete(DeleteBehavior.Cascade);
         }
 
         private List<Room> CreateRooms()

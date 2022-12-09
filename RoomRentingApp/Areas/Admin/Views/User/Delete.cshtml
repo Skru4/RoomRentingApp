@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model DeleteUserViewModel
+@{
+	 ViewData["Title"] = "Delete Account";
+}
+
+<h3>@ViewData["Title"]</h3>
+
+<div class="alert alert-warning" role="alert" style="text-shadow: rgb(24 26 27 / 30%) 0px 0px 1px;">
+	<h4 class="alert-heading">Warning!</h4>
+	<p>
+		<strong>This will permanently remove this account.</strong>
+	</p>
+</div>
+
+<div>
+	<form method="post">
+		<div class="form-floating">
+			<input asp-for="Username" style="cursor: not-allowed;" class="form-control" aria-required="true" value="@Model.Username" disabled />
+			<label asp-for="Username" class="form-label"></label>
+		</div>
+		<input type="hidden" asp-for="Username" value="@Model.Username" />
+		<input type="hidden" asp-for="Id" value="@Model.Id" />
+		<button class="w-100 btn btn-lg btn-danger" type="submit">Close and delete this account</button>
+	</form>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

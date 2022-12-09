@@ -2,6 +2,7 @@
 using RoomRentingApp.Core.Models.Renter;
 using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Core.Models.User;
+using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Core.Contracts
 {
@@ -13,5 +14,7 @@ namespace RoomRentingApp.Core.Contracts
         Task<IEnumerable<RenterServiceModel>> GetAllRentersAsync();
 
         Task<IEnumerable<AllUsersServiceModel>> GetAllUsersAsync();
+
+        Task DeleteUserAsync(string userId);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RoomRentingApp.Areas.Admin.Models;
 using RoomRentingApp.Core.Contracts;
 
 namespace RoomRentingApp.Areas.Admin.Controllers
@@ -18,5 +19,27 @@ namespace RoomRentingApp.Areas.Admin.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult Delete(string userId, string username)
+        {
+            var model = new DeleteUserViewModel()
+            {
+                Id = userId,
+                Username = username
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(DeleteUserViewModel model)
+        {
+            await adminService.DeleteUserAsync(model.Id);
+
+            return RedirectToAction("All", "User");
+
+        }
+
     }
 }

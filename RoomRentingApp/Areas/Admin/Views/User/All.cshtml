@@ -11,6 +11,7 @@
 	<thead>
 	<tr>
 		<th><label>Email</label></th>
+		<th><label>Username</label></th>
 		<th><label>Full Name</label></th>
 		<th><label>Phone Number</label></th>
 		<th><label>User Is Landlord</label></th>
@@ -23,6 +24,7 @@
 	{
 		<tr>
 			<td><label>@user.Email</label></td>
+			<td><label>@user.Username</label></td>
 			<td><label>@user.FullName</label></td>
 			<td><label>@user.PhoneNumber</label></td>
 			<td>
@@ -46,10 +48,7 @@
 				}
 			</td>
 			<td>
-				<form asp-area="Admin" asp-controller="User" asp-action="Forget" method="post">
-					<input type="hidden" value="@user.UserId">
-					<button type="submit" class="btn btn-danger">Forget</button>
-				</form>
+					<a class="fs-6 btn btn-danger mb-3 p-2" asp-area="Admin" asp-controller="User" asp-action="Delete" asp-route-userId="@user.UserId" asp-route-username="@user.Username">Delete User</a>
 			</td>
 		</tr>
 	}

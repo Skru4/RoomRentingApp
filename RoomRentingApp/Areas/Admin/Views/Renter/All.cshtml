@@ -11,9 +11,11 @@
 			<thead>
 				<tr class="table-primary">
 					<th scope="col">Email</th>
+					<th scope="col">Username</th>
 					<th scope="col">Phone Number</th>
 					<th scope="col">Occupation</th>
 					<th scope="col">Have rented room</th>
+					<th scope="col">Town Name</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -21,6 +23,7 @@
 				{
 					<tr>
 						<th scope="row">@renter.User.Email</th>
+						<td>@renter.User.UserName</td>
 						<td>@renter.PhoneNumber</td>
 						<td>@renter.Job</td>
 						<td>
@@ -33,6 +36,7 @@
 								<label class="text-center">❌</label>
 							}
 						</td>
+						<td>@renter.Room.Town.Name</td>
 					</tr>
 				}
 			</tbody>

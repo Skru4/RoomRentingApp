@@ -11,8 +11,10 @@
 			<thead>
 			<tr class="table-primary">
 				<th scope="col">Email</th>
+				<th scope="col">Username</th>
 				<th scope="col">Phone Number</th>
 				<th scope="col">Fullname</th>
+				<th scope="col">Number of added rooms</th>
 				<th scope="col">Number of added rooms</th>
 			</tr>
 			</thead>
@@ -21,9 +23,16 @@
 			{
 				<tr>
 					    <th scope="row">@landlord.User.Email</th>
+						<td>@landlord.User.UserName</td>
 						<td>@landlord.PhoneNumber</td>
 						<td>@landlord.FirstName @landlord.LastName</td>
 						<td>@landlord.RoomsToRent.Count()</td>
+					<td>
+						@foreach (var room in landlord.RoomsToRent)
+						{
+							<a asp-area="" asp-controller="Room" asp-action="Info" asp-route-roomId="@room.Id" class="btn btn-primary">Check</a>
+						}
+					</td>
 				</tr>
 			}
 			</tbody>

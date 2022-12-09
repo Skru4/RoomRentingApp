@@ -18,6 +18,7 @@
 				<th scope="col">Landlord-Status</th>
 				<th scope="col">Room Size</th>
 				<th scope="col">Image Link</th>
+				<th scope="col">Room status</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -28,10 +29,20 @@
 					<td>@room.Description</td>
 					<td>@room.Town.Name</td>
 					<td>@room.Landlord.FirstName @room.Landlord.LastName</td>
-					<td>@room.PricePerWeek</td>
+						<td>@String.Format("{0:f2}", room.PricePerWeek)</td>
 					<td>@room.RoomCategory.LandlordStatus</td>
 					<td>@room.RoomCategory.RoomSize</td>
-					<td>@room.ImageUrl</td>
+						<td><a href="@room.ImageUrl"><i>Link</i></a></td>
+					<td>
+						@if (room.RenterId != null)
+						{
+							<p>Rented</p>
+						}
+						else
+						{
+							<p>Free</p>
+						}
+					</td>
 				</tr>
 			}
 			</tbody>

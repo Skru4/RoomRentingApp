@@ -303,7 +303,7 @@ namespace RoomRentingApp.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Landlords");
+                    b.ToTable("Landlords", (string)null);
 
                     b.HasData(
                         new
@@ -334,7 +334,7 @@ namespace RoomRentingApp.Infrastructure.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Ratings");
+                    b.ToTable("Ratings", (string)null);
 
                     b.HasData(
                         new
@@ -388,7 +388,7 @@ namespace RoomRentingApp.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Renters");
+                    b.ToTable("Renters", (string)null);
 
                     b.HasData(
                         new
@@ -449,7 +449,7 @@ namespace RoomRentingApp.Infrastructure.Migrations
 
                     b.HasIndex("TownId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
 
                     b.HasData(
                         new
@@ -511,7 +511,7 @@ namespace RoomRentingApp.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomCategories");
+                    b.ToTable("RoomCategories", (string)null);
 
                     b.HasData(
                         new
@@ -549,7 +549,7 @@ namespace RoomRentingApp.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Towns");
+                    b.ToTable("Towns", (string)null);
 
                     b.HasData(
                         new

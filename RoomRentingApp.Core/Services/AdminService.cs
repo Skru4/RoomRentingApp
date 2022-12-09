@@ -4,6 +4,7 @@ using RoomRentingApp.Core.Models.Category;
 using RoomRentingApp.Core.Models.Landlord;
 using RoomRentingApp.Core.Models.Renter;
 using RoomRentingApp.Core.Models.Room;
+using RoomRentingApp.Core.Models.Town;
 using RoomRentingApp.Core.Models.User;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
@@ -13,10 +14,19 @@ namespace RoomRentingApp.Core.Services
     public class AdminService : IAdminService
     {
         private readonly IRepository repo;
+        private readonly IRoleService roleService;
+        private readonly IRenterService renterService;
+        private readonly ILandlordService landlordService;
 
-        public AdminService(IRepository repo)
+        public AdminService(IRepository repo,
+            IRoleService roleService,
+            IRenterService renterService,
+            ILandlordService landlordService)
         {
             this.repo = repo;
+            this.roleService = roleService;
+            this.renterService = renterService;
+            this.landlordService = landlordService;
         }
         public async Task<IEnumerable<RoomServiceModel>> GetAllRoomsAsync()
         {
@@ -66,13 +76,15 @@ namespace RoomRentingApp.Core.Services
                     LastName = l.LastName,
                     PhoneNumber = l.PhoneNumber,
                     UserId = l.UserId,
-                    RoomsToRent = l.RoomsToRent.Select(lr=>new RoomServiceModel()
+                    RoomsToRent = l.RoomsToRent.Select(lr => new RoomServiceModel()
                     {
-                         Id = lr.Id,
+                        Id = lr.Id,
+                         
                     }),
                     User = new ApplicationUser()
                     {
-                        Email = l.User.Email
+                        Email = l.User.Email,
+                        UserName = l.User.UserName,
                     }
 
                 }).ToListAsync();
@@ -90,10 +102,15 @@ namespace RoomRentingApp.Core.Services
                     RoomId = r.RoomId,
                     User = new ApplicationUser()
                     {
-                         Email = r.User.Email
+                        Email = r.User.Email,
+                    },
+                    Room = new RoomServiceModel()
+                    {
+                         Town = new TownServiceModel()
+                         {
+                              Name = r.Room.Town.Name
+                         }
                     }
-
-
                 }).ToListAsync();
         }
 
@@ -102,29 +119,78 @@ namespace RoomRentingApp.Core.Services
             List<AllUsersServiceModel> result;
 
             result = await repo.AllReadonly<Landlord>()
+                .Include(l => l.User)
                 .Select(l => new AllUsersServiceModel()
                 {
                     UserId = l.UserId,
                     Email = l.User.Email,
                     PhoneNumber = l.PhoneNumber,
                     FullName = $"{l.FirstName} {l.LastName}",
+                    Username = l.User.UserName,
                     IsLandlord = true,
                     IsRenter = false
 
                 }).ToListAsync();
 
             result.AddRange(await repo.AllReadonly<Renter>()
+                .Include(r => r.User)
                 .Select(r => new AllUsersServiceModel()
                 {
                     Email = r.User.Email,
                     IsLandlord = false,
                     IsRenter = true,
+                    Username = r.User.UserName,
                     Job = r.Job,
                     UserId = r.UserId,
                     PhoneNumber = r.PhoneNumber,
                 }).ToListAsync());
 
             return result;
+        }
+
+        public async Task DeleteUserAsync(string userId)
+        {
+            var user = await roleService.FindUserByIdAsync(userId);
+
+            if (await roleService.IsInRoleRenter(userId))
+            {
+                var renterId = await renterService.GetRenterIdAsync(userId);
+
+                if (await renterService.UserHaveRentsAsync(userId))
+                {
+                    Room userRoom = await repo.All<Room>()
+                        .Include(r => r.Renter)
+                        .Where(r => r.IsActive && r.RenterId == renterId)
+                        .FirstAsync();
+
+                    userRoom.RenterId = null;
+                }
+
+            }
+            else if (await roleService.IsInRoleLandlord(userId))
+            {
+                var landlordId = await landlordService.GetLandlordIdAsync(userId);
+                var landlord = await landlordService.GetLandlordWithUserIdAsync(userId);
+
+
+                var rooms = await repo.All<Room>()
+                    .Include(r => r.Renter)
+                    .Include(r => r.Landlord)
+                    .Where(r => r.IsActive && r.LandlordId == landlordId)
+                    .ToListAsync();
+
+                foreach (var room in rooms)
+                {
+                    if (room.RenterId != null)
+                    {
+                        room.RenterId = null;
+                    }
+                }
+                rooms.Clear();
+            }
+
+            await repo.SaveChangesAsync();
+            await roleService.DeleteUserAsync(user);
         }
     }
 }
