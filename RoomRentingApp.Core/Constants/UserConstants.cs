@@ -7,6 +7,8 @@
         public const string CannotBeRenter = "Administrators cannot rent rooms. Please create another account.";
         public const string CannotBeLandlord = "Administrators cannot rennt-out rooms. Please create another account.";
 
+        public const string UserDeleted = "Successfuly deleted user";
+
         public static class Roles
         {
             public const string Administrator = "Administrator";

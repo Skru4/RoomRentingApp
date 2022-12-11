@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoomRentingApp", "RoomRentingApp\RoomRentingApp.csproj", "{4D4719C9-34D5-4CF4-8500-C40D742ED5AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoomRentingApp", "RoomRentingApp\RoomRentingApp.csproj", "{4D4719C9-34D5-4CF4-8500-C40D742ED5AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoomRentingApp.Infrastructure", "RoomRentingApp.Infrastructure\RoomRentingApp.Infrastructure.csproj", "{3B02C608-E198-42E4-BA48-0A76D4DD89B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoomRentingApp.Infrastructure", "RoomRentingApp.Infrastructure\RoomRentingApp.Infrastructure.csproj", "{3B02C608-E198-42E4-BA48-0A76D4DD89B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoomRentingApp.Core", "RoomRentingApp.Core\RoomRentingApp.Core.csproj", "{3965770C-9469-4CD9-855F-B0152354D02F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoomRentingApp.Core", "RoomRentingApp.Core\RoomRentingApp.Core.csproj", "{3965770C-9469-4CD9-855F-B0152354D02F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoomRentingApp.UnitTests", "RoomRentingApp.UnitTests\RoomRentingApp.UnitTests.csproj", "{55B5AB47-F1C2-44F9-A7D8-192C67446E39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{3965770C-9469-4CD9-855F-B0152354D02F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3965770C-9469-4CD9-855F-B0152354D02F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3965770C-9469-4CD9-855F-B0152354D02F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55B5AB47-F1C2-44F9-A7D8-192C67446E39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55B5AB47-F1C2-44F9-A7D8-192C67446E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55B5AB47-F1C2-44F9-A7D8-192C67446E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55B5AB47-F1C2-44F9-A7D8-192C67446E39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
