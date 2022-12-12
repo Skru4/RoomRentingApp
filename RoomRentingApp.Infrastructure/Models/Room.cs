@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+using static RoomRentingApp.Infrastructure.Models.DataConstants;
 
 namespace RoomRentingApp.Infrastructure.Models
 {
@@ -15,15 +17,15 @@ namespace RoomRentingApp.Infrastructure.Models
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        [StringLength(70)]
+        [StringLength(RoomAddressMaxLen)]
         public string Address { get; set; } = null!;
 
         [Required]
-        [StringLength(100)]
+        [StringLength(RoomDescriptionMaxLen)]
         public string Description { get; set; } = null!;
 
         [Required]
-        [StringLength(150)]
+        [StringLength(RoomImageMaxLen)]
         public string ImageUrl { get; set; } = null!;
 
         [Column(TypeName = "money")]

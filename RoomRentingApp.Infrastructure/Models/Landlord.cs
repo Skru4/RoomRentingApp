@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using static RoomRentingApp.Infrastructure.Models.DataConstants;
+
 namespace RoomRentingApp.Infrastructure.Models
 {
     public class Landlord
@@ -15,15 +17,15 @@ namespace RoomRentingApp.Infrastructure.Models
 
         [Required]
         [Phone]
-        [StringLength(20)]
+        [StringLength(LandlordPhoneMaxLength)]
         public string PhoneNumber { get; set; } = null!;
 
         [Required]
-        [StringLength(30)] 
+        [StringLength(LandlordFirstNameMax)] 
         public string FirstName { get; set; } = null!;
 
         [Required]
-        [StringLength(30)]
+        [StringLength(LandlordLastNameMax)]
         public string LastName { get; set; } = null!;
 
         [ForeignKey(nameof(User))]

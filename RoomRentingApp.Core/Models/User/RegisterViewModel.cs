@@ -1,27 +1,31 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using static RoomRentingApp.Core.Constants.ModelConstants;
+
 namespace RoomRentingApp.Core.Models.User
 {
 	public class RegisterViewModel
     {
         [Required]
-        [MaxLength(20)]
-        [MinLength(5)]
+        [MaxLength(UsernameMaxLen)]
+        [MinLength(UsernameMinLen)]
         public string UserName { get; set; } = null!;
 
         [Required]
-        [MaxLength(20)]
-        [MinLength(5)]
+        [MaxLength(PasswordMaxLen)]
+        [MinLength(PasswordMinLen)]
         [DataType(DataType.Password)]
         public string Password { get; set; } = null!;
 
-        [Compare(nameof(Password))]
+        [Required]
+        [Compare(nameof(Password), ErrorMessage = PasswordError)]
         [DataType(DataType.Password)]
+        [Display(Name = "Confirm Password")]
         public string ConfirmPassword { get; set; } = null!;
 
         [Required]
-        [MaxLength(60)]
-        [MinLength(10)]
+        [MaxLength(EmailMaxLen)]
+        [MinLength(EmailMinLen)]
         [EmailAddress]
         public string Email { get; set; } = null!;
     }

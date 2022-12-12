@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
+using static RoomRentingApp.Infrastructure.Models.DataConstants;
+
 namespace RoomRentingApp.Infrastructure.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        [StringLength(50)]
+        [StringLength(NameMaxLength)]
         public string? FirstName { get; set; }
 
-        [StringLength(50)]
+        [StringLength(NameMaxLength)]
         public string? LastName { get; set; }
 
-        [StringLength(150)]
+        [StringLength(ImageUrlMaxLength)]
         public string? ImageUrl { get; set; }
     }
 }

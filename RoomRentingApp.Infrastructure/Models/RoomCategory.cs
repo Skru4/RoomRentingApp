@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using static RoomRentingApp.Infrastructure.Models.DataConstants;
+
 namespace RoomRentingApp.Infrastructure.Models
 {
     public class RoomCategory
@@ -13,11 +15,11 @@ namespace RoomRentingApp.Infrastructure.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(20)]
+        [StringLength(CategorySizeMaxLen)]
         public string RoomSize { get; set; } = null!;
 
         [Required]
-        [StringLength(20)]
+        [StringLength(CategoryStatusMaxLen)]
         public string LandlordStatus { get; set; } = null!;
 
         public ICollection<Room> Rooms { get; set; }

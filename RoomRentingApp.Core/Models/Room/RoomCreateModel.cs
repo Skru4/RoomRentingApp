@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using RoomRentingApp.Core.Models.Town;
 using System.ComponentModel.DataAnnotations;
+using static RoomRentingApp.Core.Constants.ModelConstants;
 
 namespace RoomRentingApp.Core.Models.Room
 {
@@ -9,22 +11,22 @@ namespace RoomRentingApp.Core.Models.Room
         public Guid Id { get; set; } = new Guid();
 
         [Required]
-        [StringLength(70, MinimumLength = 5)]
+        [StringLength(AddressMaxLen, MinimumLength = AddressMinLen)]
         public string Address { get; set; } = null!;
 
         [Required]
-        [StringLength(100, MinimumLength = 10)]
+        [StringLength(DescriptionMaxLen, MinimumLength = DescriptionMinLen)]
         public string Description { get; set; } = null!;
 
         [Required]
         [Url]
-        [StringLength(150, MinimumLength = 10)]
+        [StringLength(ImageUrlMaxLen, MinimumLength = ImageUrlMinLen)]
         [Display(Name = "Image Url")]
         public string ImageUrl { get; set; } = null!;
 
         [Display(Name = "Price per Week")]
         [Precision(18, 2)]
-        [Range(0.00, 2000.00, ErrorMessage = "Price per month must be a positive number and less than {2} leva")]
+        [Range(0.00, 2000.00, ErrorMessage = PriceError)]
         public decimal PricePerWeek { get; set; }
 
         [Display(Name = "Room Category")]

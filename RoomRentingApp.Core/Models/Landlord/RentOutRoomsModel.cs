@@ -1,27 +1,29 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using static RoomRentingApp.Core.Constants.ModelConstants;
+
 namespace RoomRentingApp.Core.Models.Landlord
 {
     public class RentOutRoomsModel
     {
         [Required]
-        [StringLength(20, MinimumLength = 7)]
+        [StringLength(PhoneMaxLen, MinimumLength = PhoneMinLen)]
         [Phone]
         [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; } = null!;
 
         [Required]
-        [StringLength(50, MinimumLength =5)]
+        [StringLength(EmailMaxLen, MinimumLength = EmailMinLen)]
         [EmailAddress]
         public string Email { get; set; } = null!;
 
         [Required]
-        [StringLength(30, MinimumLength = 3)]
+        [StringLength(LandlordNameMaxLen, MinimumLength = LandlordNameMinLen)]
         [Display(Name = "First Name")]
         public string FirstName { get; set; } = null!;
 
         [Required]
-        [StringLength(30, MinimumLength = 3)]
+        [StringLength(LandlordNameMaxLen, MinimumLength = LandlordNameMinLen)]
         [Display(Name = "Last Name")]
         public string LastName { get; set; } = null!;
     }
