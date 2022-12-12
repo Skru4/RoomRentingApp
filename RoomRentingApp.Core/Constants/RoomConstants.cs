@@ -32,5 +32,7 @@
 
         public const string UnexpectedErrorDeleteRoom = "Unexpected error. You cant delete this room";
 
+        public const string RenterNotFound = "Renter does not found";
+
     }
 }

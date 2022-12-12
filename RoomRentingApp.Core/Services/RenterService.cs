@@ -78,7 +78,7 @@ namespace RoomRentingApp.Core.Services
                 .FirstAsync(r => r.UserId == userId)).Id;
         }
 
-        public async Task<Renter> GetRenterWithRenterId(Guid? renterId)
+        public async Task<Renter> GetRenterWithRenterId(Guid renterId)
         {
             var renter =  await repo.All<Renter>()
                 .Where(r => r.Id == renterId)

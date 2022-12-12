@@ -117,7 +117,7 @@ namespace RoomRentingApp.Core.Services
 
             return result;
         }
-
+         
 
         public async Task<IEnumerable<RoomCategoryViewModel>> GetCategoriesAsync()
         {
@@ -248,13 +248,11 @@ namespace RoomRentingApp.Core.Services
             if (room != null && room.RenterId != null)
             {
                 return new ErrorViewModel() {Message = RoomIsTaken};
-                //throw new ArgumentException("Room has already someone renting it");
             }
 
             if (room == null)
             {
                 return new ErrorViewModel() { Message = RoomNotFount };
-                //throw new ArgumentException("This room cannot be found");
             }
 
             room.RenterId = currentRenterId;
@@ -412,6 +410,10 @@ namespace RoomRentingApp.Core.Services
         public async Task<ErrorViewModel> LeaveRoomAsync(Guid roomId)
         {
             var room = await repo.GetByIdAsync<Room>(roomId);
+            if (room.RenterId == null)
+            {
+                return new ErrorViewModel() {Message = RenterNotFound };
+            }
             var renter = await repo.GetByIdAsync<Renter>(room.RenterId);
 
             renter.RoomId = null;
