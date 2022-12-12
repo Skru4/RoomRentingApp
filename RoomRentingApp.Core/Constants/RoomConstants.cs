@@ -1,6 +1,6 @@
 ﻿namespace RoomRentingApp.Core.Constants
 {
-	public static class RoomConstatns
+	public static class RoomConstants
     {
         public const string SuccessfulAddedRoom = "You have created a new room";
 
@@ -29,6 +29,7 @@
         public const string UnexpectedErrorRating = "Unexpected error. You cant add rating";
 
         public const string UnexpectedErrorLeaveRoom = "Unexpected error. You cant leave room";
+
         public const string UnexpectedErrorDeleteRoom = "Unexpected error. You cant delete this room";
 
     }

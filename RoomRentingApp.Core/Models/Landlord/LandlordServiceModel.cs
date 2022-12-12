@@ -1,25 +1,23 @@
-﻿using RoomRentingApp.Infrastructure.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using RoomRentingApp.Core.Models.Room;
+﻿using RoomRentingApp.Core.Models.Room;
+using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Core.Models.Landlord
 {
-	public class LandlordServiceModel
+    public class LandlordServiceModel
 	{
         public Guid Id { get; set; } 
 
-        public string PhoneNumber { get; set; } 
+        public string PhoneNumber { get; set; } = null!;
 
 
-        public string FirstName { get; set; } 
+        public string FirstName { get; set; } = null!;
 
-        public string LastName { get; set; }
+        public string LastName { get; set; } = null!;
 
-        public string UserId { get; set; } 
+        public string UserId { get; set; } = null!;
 
-        public ApplicationUser User { get; set; } 
+        public ApplicationUser User { get; set; } = null!;
 
-        public IEnumerable<RoomServiceModel> RoomsToRent { get; set; }
+        public IEnumerable<RoomServiceModel> RoomsToRent { get; set; } = Enumerable.Empty<RoomServiceModel>();
     }
 }

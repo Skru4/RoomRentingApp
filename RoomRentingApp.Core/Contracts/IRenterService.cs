@@ -1,10 +1,9 @@
 ﻿using RoomRentingApp.Core.Models.Error;
-using RoomRentingApp.Core.Models.Landlord;
 using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Core.Contracts
 {
-	public interface IRenterService
+    public interface IRenterService
 	{
         Task<bool> UserExistByIdAsync(string userId);
 

@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Error;
 using RoomRentingApp.Infrastructure.Models;
+
 using static RoomRentingApp.Core.Constants.UserConstants.Roles;
 
 namespace RoomRentingApp.Controllers

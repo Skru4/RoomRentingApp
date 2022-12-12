@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+
 using RoomRentingApp.Core.Constants;
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Landlord;
 using RoomRentingApp.Extensions;
+using RoomRentingApp.Infrastructure.Models;
 
 using static RoomRentingApp.Core.Constants.RenterConstants;
 using static RoomRentingApp.Core.Constants.LandlordConstants;
 using static RoomRentingApp.Core.Constants.UserConstants.Roles;
 using static RoomRentingApp.Core.Constants.UserConstants;
-using Microsoft.AspNetCore.Identity;
-using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Controllers
 {

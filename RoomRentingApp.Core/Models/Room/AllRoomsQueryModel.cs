@@ -32,7 +32,7 @@ namespace RoomRentingApp.Core.Models.Room
 
         public IEnumerable<string> Towns { get; set; } = Enumerable.Empty<string>();
 
-        public IEnumerable<int> Ratings { get; set; }
+        public IEnumerable<int> Ratings { get; set; } = Enumerable.Empty<int>();
 
         public IEnumerable<AllRoomServiceModel> Rooms { get; set; } = Enumerable.Empty<AllRoomServiceModel>();
 

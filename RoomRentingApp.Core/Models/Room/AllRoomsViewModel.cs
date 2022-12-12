@@ -1,5 +1,4 @@
 ﻿using RoomRentingApp.Core.Models.Rating;
-using RoomRentingApp.Infrastructure.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace RoomRentingApp.Core.Models.Room
@@ -20,9 +19,9 @@ namespace RoomRentingApp.Core.Models.Room
 
         public string Town { get; set; } = null!;
 
-        public RoomCategoryViewModel Categories { get; set; }
+        public RoomCategoryViewModel Categories { get; set; } = null!;
 
-        public RatingViewModel Ratings { get; set; }
+        public RatingViewModel Ratings { get; set; } = null!;
 
         [Display(Name = "Is Rented")]
         public bool IsRented { get; set; }

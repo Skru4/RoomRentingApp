@@ -1,14 +1,15 @@
 ﻿using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using RoomRentingApp.Core.Constants;
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Extensions;
+
 using static RoomRentingApp.Core.Constants.RenterConstants;
-using static RoomRentingApp.Core.Constants.RoomConstatns;
+using static RoomRentingApp.Core.Constants.RoomConstants;
 using static RoomRentingApp.Core.Constants.UserConstants.Roles;
-using static RoomRentingApp.Core.Constants.LandlordConstants;
 
 namespace RoomRentingApp.Controllers
 {

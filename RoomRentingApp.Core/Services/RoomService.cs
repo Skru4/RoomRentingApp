@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using RoomRentingApp.Core.Constants;
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Error;
@@ -9,7 +10,7 @@ using RoomRentingApp.Core.Models.Town;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
 
-using static RoomRentingApp.Core.Constants.RoomConstatns;
+using static RoomRentingApp.Core.Constants.RoomConstants;
 
 namespace RoomRentingApp.Core.Services
 {

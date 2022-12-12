@@ -1,13 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore;
-using RoomRentingApp.Infrastructure.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
 using RoomRentingApp.Core.Models.Town;
+using System.ComponentModel.DataAnnotations;
 
 namespace RoomRentingApp.Core.Models.Room
 {
-	public class RoomCreateModel
+    public class RoomCreateModel
     {
         public Guid Id { get; set; } = new Guid();
 

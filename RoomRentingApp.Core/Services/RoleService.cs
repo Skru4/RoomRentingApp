@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Error;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
+
 using static RoomRentingApp.Core.Constants.UserConstants;
 using static RoomRentingApp.Core.Constants.UserConstants.Roles;
 

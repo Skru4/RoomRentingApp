@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
+
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Services;
 using RoomRentingApp.Infrastructure.Data;

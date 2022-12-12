@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Category;
 using RoomRentingApp.Core.Models.Landlord;

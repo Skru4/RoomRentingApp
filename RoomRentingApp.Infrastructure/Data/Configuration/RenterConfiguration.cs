@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Infrastructure.Data.Configuration

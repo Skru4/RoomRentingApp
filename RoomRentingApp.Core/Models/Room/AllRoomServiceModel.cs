@@ -1,10 +1,8 @@
-﻿using RoomRentingApp.Core.Models.Rating;
-using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace RoomRentingApp.Core.Models.Room
 {
-	public class AllRoomServiceModel
+    public class AllRoomServiceModel
 	{
         public Guid Id { get; set; }
 

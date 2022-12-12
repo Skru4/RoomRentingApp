@@ -1,6 +1,5 @@
 ﻿using RoomRentingApp.Core.Models.Error;
 using RoomRentingApp.Infrastructure.Models;
-using System.Runtime.CompilerServices;
 
 namespace RoomRentingApp.Core.Contracts
 {

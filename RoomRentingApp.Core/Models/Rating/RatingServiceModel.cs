@@ -1,9 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using RoomRentingApp.Core.Models.Room;
+﻿using RoomRentingApp.Core.Models.Room;
 
 namespace RoomRentingApp.Core.Models.Rating
 {
-	public class RatingServiceModel
+    public class RatingServiceModel
 	{
         public int Id { get; set; }
 

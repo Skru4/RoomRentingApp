@@ -2,11 +2,10 @@
 using RoomRentingApp.Core.Models.Renter;
 using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Core.Models.User;
-using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Core.Contracts
 {
-	public interface IAdminService
+    public interface IAdminService
     {
         Task<IEnumerable<RoomServiceModel>> GetAllRoomsAsync();
 

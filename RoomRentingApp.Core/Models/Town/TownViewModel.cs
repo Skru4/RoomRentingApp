@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace RoomRentingApp.Core.Models.Town
+﻿namespace RoomRentingApp.Core.Models.Town
 {
-	public class TownViewModel
+    public class TownViewModel
 	{
         public int Id { get; set; }
 
