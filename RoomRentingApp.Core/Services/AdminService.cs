@@ -9,6 +9,8 @@ using RoomRentingApp.Core.Models.User;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
 
+using static RoomRentingApp.Core.Constants.UserConstants;
+
 namespace RoomRentingApp.Core.Services
 {
     public class AdminService : IAdminService
@@ -61,9 +63,10 @@ namespace RoomRentingApp.Core.Services
                         LandlordStatus = r.RoomCategory.LandlordStatus,
                         RoomSize = r.RoomCategory.RoomSize,
                     }
-                    ,Ratings = r.Ratings.Select(t=> new Models.Rating.RatingServiceModel()
+                    ,
+                    Ratings = r.Ratings.Select(t => new Models.Rating.RatingServiceModel()
                     {
-                         RatingDigit = t.RatingDigit
+                        RatingDigit = t.RatingDigit
                     })
                 })
                 .ToListAsync();
@@ -83,7 +86,7 @@ namespace RoomRentingApp.Core.Services
                     RoomsToRent = l.RoomsToRent.Select(lr => new RoomServiceModel()
                     {
                         Id = lr.Id,
-                         
+
                     }),
                     User = new ApplicationUser()
                     {
@@ -110,10 +113,10 @@ namespace RoomRentingApp.Core.Services
                     },
                     Room = new RoomServiceModel()
                     {
-                         Town = new TownServiceModel()
-                         {
-                              Name = r.Room.Town.Name
-                         }
+                        Town = new TownServiceModel()
+                        {
+                            Name = r.Room.Town.Name
+                        }
                     }
                 }).ToListAsync();
         }
@@ -155,6 +158,11 @@ namespace RoomRentingApp.Core.Services
         public async Task DeleteUserAsync(string userId)
         {
             var user = await roleService.FindUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user), UserNotFound);
+            }
 
             if (await roleService.IsInRoleRenter(userId))
             {

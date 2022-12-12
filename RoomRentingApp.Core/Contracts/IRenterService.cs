@@ -1,4 +1,5 @@
-﻿using RoomRentingApp.Core.Models.Landlord;
+﻿using RoomRentingApp.Core.Models.Error;
+using RoomRentingApp.Core.Models.Landlord;
 using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Core.Contracts
@@ -9,7 +10,7 @@ namespace RoomRentingApp.Core.Contracts
 
         Task<bool> UserPhoneNumberExistsAsync(string phoneNumber);
 
-        Task CreateNewRenterAsync(string userId, string phoneNumber, string job);
+        Task<ErrorViewModel> CreateNewRenterAsync(string userId, string phoneNumber, string job);
 
         Task<Renter> GetRenterWithUserIdAsync(string userId);
 

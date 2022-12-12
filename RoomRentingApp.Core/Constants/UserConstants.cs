@@ -8,6 +8,7 @@
         public const string CannotBeLandlord = "Administrators cannot rennt-out rooms. Please create another account.";
 
         public const string UserDeleted = "Successfuly deleted user";
+        public const string UserNotFound = "User cannot be found";
 
         public static class Roles
         {

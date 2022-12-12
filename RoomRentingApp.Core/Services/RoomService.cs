@@ -1,13 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
+using RoomRentingApp.Core.Constants;
 using RoomRentingApp.Core.Contracts;
+using RoomRentingApp.Core.Models.Error;
 using RoomRentingApp.Core.Models.Rating;
 using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Core.Models.Room.Enum;
 using RoomRentingApp.Core.Models.Town;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
-using System.Security.AccessControl;
+
+using static RoomRentingApp.Core.Constants.RoomConstatns;
 
 namespace RoomRentingApp.Core.Services
 {
@@ -192,7 +194,7 @@ namespace RoomRentingApp.Core.Services
 
             if (room == null)
             {
-                throw new ArgumentException("Invalid room ID");
+                throw new ArgumentException(MessageConstants.InvalidId);
             }
 
             return room;
@@ -208,6 +210,8 @@ namespace RoomRentingApp.Core.Services
 
         public async Task<Guid> CreateRoomAsync(RoomCreateModel model, Guid lanlordId)
         {
+            var error = new ErrorViewModel();
+
             var room = new Room()
             {
                 Address = model.Address,
@@ -222,24 +226,34 @@ namespace RoomRentingApp.Core.Services
 
             };
 
-            await repo.AddAsync(room);
-            await repo.SaveChangesAsync();
+            try
+            {
+                await repo.AddAsync(room);
+                await repo.SaveChangesAsync();
+            }
+            catch (Exception )
+            {
+                return Guid.Empty;
+            }
+
 
             return room.Id;
         }
 
-        public async Task RentRoomAsync(Guid roomId, Guid currentRenterId)
+        public async Task<ErrorViewModel> RentRoomAsync(Guid roomId, Guid currentRenterId)
         {
             var room = await repo.GetByIdAsync<Room>(roomId);
 
             if (room != null && room.RenterId != null)
             {
-                throw new ArgumentException("Room has already someone renting it");
+                return new ErrorViewModel() {Message = RoomIsTaken};
+                //throw new ArgumentException("Room has already someone renting it");
             }
 
             if (room == null)
             {
-                throw new ArgumentException("This room cannot be found");
+                return new ErrorViewModel() { Message = RoomNotFount };
+                //throw new ArgumentException("This room cannot be found");
             }
 
             room.RenterId = currentRenterId;
@@ -248,7 +262,16 @@ namespace RoomRentingApp.Core.Services
 
             renter.Room = room;
 
-            await repo.SaveChangesAsync();
+            try
+            {
+                await repo.SaveChangesAsync();
+            }
+            catch (Exception )
+            {
+                return new ErrorViewModel() {Message = UnexpectedError };
+            }
+
+            return null;
         }
 
         public async Task<bool> RoomExistAsync(Guid roomId)
@@ -280,19 +303,27 @@ namespace RoomRentingApp.Core.Services
             return result;
         }
 
-        public async Task AddRatingAsync(RatingRoomViewModel model)
+        public async Task<ErrorViewModel> AddRatingAsync(RatingRoomViewModel model)
         {
             var room = await repo.GetByIdAsync<Room>(model.Id);
 
             int rating = model.RatingDigit;
+
 
             room.Ratings.Add(new Rating()
             {
                 RoomId = model.Id,
                 RatingDigit = rating
             });
-
-            await repo.SaveChangesAsync();
+            try
+            {
+                await repo.SaveChangesAsync();
+            }
+            catch (Exception )
+            {
+                return new ErrorViewModel() { Message = UnexpectedErrorRating };
+            }
+            return null;
         }
 
         public async Task<AllRoomsViewModel> GetRoomByRenterId(Guid renterId)
@@ -377,7 +408,7 @@ namespace RoomRentingApp.Core.Services
             return false;
         }
 
-        public async Task LeaveRoomAsync(Guid roomId)
+        public async Task<ErrorViewModel> LeaveRoomAsync(Guid roomId)
         {
             var room = await repo.GetByIdAsync<Room>(roomId);
             var renter = await repo.GetByIdAsync<Renter>(room.RenterId);
@@ -386,16 +417,30 @@ namespace RoomRentingApp.Core.Services
 
             room.RenterId = null;
 
-
-            await repo.SaveChangesAsync();
+            try
+            {
+                await repo.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return new ErrorViewModel() { Message = UnexpectedErrorLeaveRoom };
+            }
+            return null;
         }
 
-        public async Task DeleteRoomAsync(Guid roomId)
+        public async Task<ErrorViewModel> DeleteRoomAsync(Guid roomId)
         {
             var room = await repo.GetByIdAsync<Room>(roomId);
             room.IsActive = false;
-
-            await repo.SaveChangesAsync();
+            try
+            {
+                await repo.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return new ErrorViewModel() {Message = UnexpectedErrorDeleteRoom};
+            }
+            return null;
         }
     }
 }

@@ -2,10 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RoomRentingApp.Core.Contracts;
-using RoomRentingApp.Core.Services;
+using RoomRentingApp.Core.Models.Error;
 using RoomRentingApp.Infrastructure.Models;
-using RoomRentingApp.Models;
-using System.Diagnostics;
 using static RoomRentingApp.Core.Constants.UserConstants.Roles;
 
 namespace RoomRentingApp.Controllers
@@ -69,9 +67,9 @@ namespace RoomRentingApp.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Error(ErrorViewModel errors)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(errors);
         }
     }
 }

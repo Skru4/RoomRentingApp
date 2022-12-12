@@ -1,4 +1,4 @@
-﻿using RoomRentingApp.Core.Models.Rating;
+﻿using RoomRentingApp.Core.Models.Error;
 using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Core.Models.Room.Enum;
 using RoomRentingApp.Core.Models.Town;
@@ -33,7 +33,7 @@ namespace RoomRentingApp.Core.Contracts
 
         Task<Guid> CreateRoomAsync(RoomCreateModel model, Guid lanlordId);
 
-        Task RentRoomAsync(Guid roomId, Guid currentRenterId);
+        Task<ErrorViewModel> RentRoomAsync(Guid roomId, Guid currentRenterId);
 
         Task<bool> RoomExistAsync(Guid roomId);
 
@@ -41,7 +41,7 @@ namespace RoomRentingApp.Core.Contracts
 
         Task<RatingRoomViewModel> GetRoomByIdAsync(Guid id);
 
-        Task AddRatingAsync(RatingRoomViewModel model);
+        Task<ErrorViewModel> AddRatingAsync(RatingRoomViewModel model);
 
         Task<AllRoomsViewModel> GetRoomByRenterId(Guid renterId);
 
@@ -51,9 +51,9 @@ namespace RoomRentingApp.Core.Contracts
 
         Task<bool> IsRoomAddedByLandlordWithId(Guid roomId, Guid landlordId);
 
-        Task LeaveRoomAsync(Guid roomId);
+        Task<ErrorViewModel> LeaveRoomAsync(Guid roomId);
 
-        Task DeleteRoomAsync(Guid roomId);
+        Task<ErrorViewModel> DeleteRoomAsync(Guid roomId);
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using RoomRentingApp.Infrastructure.Models;
+﻿using RoomRentingApp.Core.Models.Error;
+using RoomRentingApp.Infrastructure.Models;
 using System.Runtime.CompilerServices;
 
 namespace RoomRentingApp.Core.Contracts
@@ -17,7 +18,7 @@ namespace RoomRentingApp.Core.Contracts
 
         Task<bool> IsInRoleLandlord(string userId);
 
-        Task DeleteUserAsync(ApplicationUser user);
+        Task<ErrorViewModel> DeleteUserAsync(ApplicationUser user);
 
         Task SinOutAndInUserAsync(ApplicationUser user);
     }

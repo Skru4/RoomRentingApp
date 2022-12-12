@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RoomRentingApp.Core.Contracts;
+using RoomRentingApp.Core.Models.Error;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
-
+using static RoomRentingApp.Core.Constants.UserConstants;
 using static RoomRentingApp.Core.Constants.UserConstants.Roles;
 
 namespace RoomRentingApp.Core.Services
@@ -51,7 +52,11 @@ namespace RoomRentingApp.Core.Services
         {
             var user = await repo.All<ApplicationUser>()
                 .Where(u => u.Id == userId)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user), UserNotFound);
+            }
 
             if (await userManager.IsInRoleAsync(user, AdministratorRole))
             {
@@ -64,7 +69,12 @@ namespace RoomRentingApp.Core.Services
         {
             var user = await repo.All<ApplicationUser>()
                 .Where(u => u.Id == userId)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user), UserNotFound);
+            }
+
 
             if (await userManager.IsInRoleAsync(user, RenterRole))
             {
@@ -77,7 +87,12 @@ namespace RoomRentingApp.Core.Services
         {
             var user = await repo.All<ApplicationUser>()
                 .Where(u => u.Id == userId)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user), UserNotFound);
+            }
 
             if (await userManager.IsInRoleAsync(user, LandlordRole))
             {
@@ -86,11 +101,17 @@ namespace RoomRentingApp.Core.Services
             return false;
         }
 
-        public async Task DeleteUserAsync(ApplicationUser user)
+        public async Task<ErrorViewModel> DeleteUserAsync(ApplicationUser user)
         {
-            await userManager.DeleteAsync(user);
-
-
+            try
+            {
+                await userManager.DeleteAsync(user);
+            }
+            catch (Exception )
+            {
+                return new ErrorViewModel() {Message = UserNotFound};
+            }
+            return null;
         }
 
         public async Task SinOutAndInUserAsync(ApplicationUser user)

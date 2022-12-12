@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using RoomRentingApp.Core.Contracts;
+using RoomRentingApp.Core.Models.Error;
 using RoomRentingApp.Core.Models.Landlord;
 using RoomRentingApp.Core.Models.Room;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
+
+using static RoomRentingApp.Core.Constants.LandlordConstants;
 
 namespace RoomRentingApp.Core.Services
 {
@@ -29,7 +31,7 @@ namespace RoomRentingApp.Core.Services
             => await repo.All<Landlord>()
                 .AnyAsync(l => l.User.Email == email);
 
-        public async Task CreateNewLandlordAsync(string userId, string phoneNumber, string firstName, string lastName)
+        public async Task<ErrorViewModel> CreateNewLandlordAsync(string userId, string phoneNumber, string firstName, string lastName)
         {
             var landlord = new Landlord()
             {
@@ -39,16 +41,29 @@ namespace RoomRentingApp.Core.Services
                 LastName = lastName
             };
 
-
-            await repo.AddAsync(landlord);
-            await repo.SaveChangesAsync();
-
+            try
+            {
+                await repo.AddAsync(landlord);
+                await repo.SaveChangesAsync();
+            }
+            catch (Exception )
+            {
+                return new ErrorViewModel() {Message = UnexpectedErrorCreate };
+            }
+            return null;
         }
 
         public async Task<Guid> GetLandlordIdAsync(string userId)
         {
-            return (await repo.AllReadonly<Landlord>()
-                .FirstAsync(l => l.UserId == userId)).Id;
+            var landlordId = (await repo.AllReadonly<Landlord>()
+                .FirstOrDefaultAsync(l => l.UserId == userId)).Id;
+
+            if (landlordId == Guid.Empty)
+            {
+                throw new ArgumentException(CannotFind);
+            }
+
+            return landlordId;
         }
 
         public async Task<IEnumerable<AllLandlordsViewModel>> GetAllLandlordsAsync()
@@ -77,9 +92,15 @@ namespace RoomRentingApp.Core.Services
 
         public async Task<Landlord> GetLandlordWithUserIdAsync(string userId)
         {
-            return await repo.All<Landlord>()
+            var landlord = await repo.All<Landlord>()
                 .Where(l => l.UserId == userId)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
+
+            if (landlord == null)
+            {
+                throw new ArgumentNullException(nameof(landlord),CannotFind);
+            }
+            return landlord;
         }
     }
 }

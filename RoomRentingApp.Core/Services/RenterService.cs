@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RoomRentingApp.Core.Contracts;
-using RoomRentingApp.Core.Models.Landlord;
-using RoomRentingApp.Core.Models.Room;
+using RoomRentingApp.Core.Models.Error;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
 
+using static RoomRentingApp.Core.Constants.RenterConstants;
+
 namespace RoomRentingApp.Core.Services
 {
-	public class RenterService : IRenterService
+    public class RenterService : IRenterService
 	{
         private readonly IRepository repo;
 
@@ -25,7 +26,7 @@ namespace RoomRentingApp.Core.Services
         => await repo.All<Renter>().
             AnyAsync(r => r.PhoneNumber == phoneNumber);
 
-        public async Task CreateNewRenterAsync(string userId, string phoneNumber,string job)
+        public async Task<ErrorViewModel> CreateNewRenterAsync(string userId, string phoneNumber,string job)
         {
             var renter = new Renter()
             {
@@ -34,19 +35,31 @@ namespace RoomRentingApp.Core.Services
                 Job = job
             };
 
+            try
+            {
+                await repo.AddAsync(renter);
+                await repo.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return new ErrorViewModel() {Message = UnexpectedErrorCreate};
+            }
 
-            await repo.AddAsync(renter);
-            await repo.SaveChangesAsync();
+            return null;
         }
 
-        public Task<Renter> GetRenterWithUserIdAsync(string userId)
+        public async Task<Renter> GetRenterWithUserIdAsync(string userId)
         {
-            var renter = repo.All<Renter>()
+            var renter =await repo.All<Renter>()
                 .Include(r=>r.User)
                 .Include(r=>r.Room)
                 .Where(r => r.UserId == userId)
                 .FirstOrDefaultAsync();
 
+            if (renter == null)
+            {
+                throw new ArgumentNullException(nameof(renter));
+            }
             return renter;
         }
 
@@ -66,9 +79,15 @@ namespace RoomRentingApp.Core.Services
 
         public async Task<Renter> GetRenterWithRenterId(Guid? renterId)
         {
-            return await repo.All<Renter>()
+            var renter =  await repo.All<Renter>()
                 .Where(r => r.Id == renterId)
                 .FirstOrDefaultAsync();
+            if (renter == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            return renter;
         }
     }
 }

@@ -154,7 +154,11 @@ namespace RoomRentingApp.Controllers
         [Authorize(Roles = RenterRole)]
         public async Task<IActionResult> Rating(RatingRoomViewModel model)
         {
-           
+            if (model.RatingDigit < 1 || model.RatingDigit > 10)
+            {
+                TempData[MessageConstants.ErrorMessage] = OutOfRangeRating;
+                return RedirectToAction("All", "Room");
+            }
             await roomService.AddRatingAsync(model);
 
             TempData[MessageConstants.SuccessMessage] = SuccessfulRate;
@@ -200,7 +204,7 @@ namespace RoomRentingApp.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            
+
             var landlordId = await landlordService.GetLandlordIdAsync(userId);
             var model = await roomService.GetRoomByLandlordId(landlordId);
 
