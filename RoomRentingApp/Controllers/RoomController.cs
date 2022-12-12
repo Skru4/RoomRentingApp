@@ -21,7 +21,7 @@ namespace RoomRentingApp.Controllers
 
         public RoomController(IRoomService roomService,
             ILandlordService landlordService,
-            IRenterService renterService)         
+            IRenterService renterService)
         {
             this.roomService = roomService;
             this.landlordService = landlordService;
@@ -29,7 +29,7 @@ namespace RoomRentingApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All([FromQuery]AllRoomsQueryModel query)
+        public async Task<IActionResult> All([FromQuery] AllRoomsQueryModel query)
         {
             var result = await roomService.GetAllAsync(
                 query.CategoryStatus,
@@ -80,7 +80,7 @@ namespace RoomRentingApp.Controllers
             {
                 model.RoomCategories = await roomService.GetCategoriesAsync();
                 model.Towns = await roomService.GetTownsAsync();
-                return View(model); 
+                return View(model);
             }
 
             string sanitizedAddress = this.SanitizeString(model.Address);
@@ -97,7 +97,7 @@ namespace RoomRentingApp.Controllers
 
             TempData[MessageConstants.SuccessMessage] = SuccessfulAddedRoom;
 
-            return RedirectToAction(nameof(All), new {roomId});
+            return RedirectToAction(nameof(All), new { roomId });
         }
 
         public async Task<IActionResult> Info(Guid roomId)
@@ -106,7 +106,7 @@ namespace RoomRentingApp.Controllers
 
             var model = await roomService.GetInfoAsync(roomId);
 
-            return View(model); 
+            return View(model);
         }
 
         [Authorize(Roles = RenterRole)]
@@ -118,7 +118,7 @@ namespace RoomRentingApp.Controllers
                 return RedirectToAction("All", "Room");
             }
 
-            if (await  roomService.IsRoomRentedAsync(id))
+            if (await roomService.IsRoomRentedAsync(id))
             {
                 TempData[MessageConstants.ErrorMessage] = RoomAlreadyRented;
 
@@ -137,7 +137,7 @@ namespace RoomRentingApp.Controllers
 
             TempData[MessageConstants.SuccessMessage] = SuccessfulRentedRoom;
 
-            return RedirectToAction("All","Room");  
+            return RedirectToAction("All", "Room");
         }
 
         [HttpGet]
@@ -201,7 +201,7 @@ namespace RoomRentingApp.Controllers
         public async Task<IActionResult> Rentals()
         {
             var userId = User.Id();
-            if (! await landlordService.UserExistByIdAsync(userId))
+            if (!await landlordService.UserExistByIdAsync(userId))
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -227,7 +227,7 @@ namespace RoomRentingApp.Controllers
                 return RedirectToAction(nameof(All));
             }
             var renterId = await renterService.GetRenterIdAsync(userId);
-            if (!await roomService.IsRoomRentedByRenterWihId(id,renterId))
+            if (!await roomService.IsRoomRentedByRenterWihId(id, renterId))
             {
                 return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
             }
@@ -266,7 +266,74 @@ namespace RoomRentingApp.Controllers
             return RedirectToAction(nameof(Rentals));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var landlordId = await landlordService.GetLandlordIdAsync(User.Id());
 
+            if (!await roomService.RoomExistAsync(id))
+            {
+                return RedirectToAction(nameof(Rentals));
+            }
+
+            if (!await roomService.IsRoomAddedByLandlordWithId(id, landlordId))
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+            }
+
+            var room = await roomService.GetRoomInfoByRoomIdAsync(id);
+
+            var model = new RoomCreateModel()
+            {
+                Id = id,
+                Address = room.Address,
+                Description = room.Description,
+                ImageUrl = room.ImageUrl,
+                PricePerWeek = room.PricePerWeek,
+                RoomCategories = await roomService.GetCategoriesAsync(),
+                Towns = await roomService.GetTownsAsync()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Guid id, RoomCreateModel model)
+        {
+            var landlordId = await landlordService.GetLandlordIdAsync(User.Id());
+
+            if (id != model.Id)
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+            }
+            if (!await roomService.RoomExistAsync(model.Id))
+            {
+                return RedirectToAction(nameof(Rentals));
+            }
+            if (!await roomService.IsRoomAddedByLandlordWithId(model.Id, landlordId))
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.RoomCategories = await roomService.GetCategoriesAsync();
+                model.Towns = await roomService.GetTownsAsync();
+                return View(model);
+            }
+
+            string sanitizedAddress = this.SanitizeString(model.Address);
+            string sanitizedDescription = this.SanitizeString(model.Description);
+
+            if (string.IsNullOrEmpty(sanitizedAddress) || string.IsNullOrEmpty(sanitizedDescription))
+            {
+                TempData[MessageConstants.ErrorMessage] = DoNotCheat;
+                return View(model);
+            }
+
+            await roomService.EditAsync(id, model); 
+
+            return RedirectToAction(nameof(Rentals), new {id=model.Id});
+        }
 
 
         private string SanitizeString(string content)
@@ -275,5 +342,5 @@ namespace RoomRentingApp.Controllers
 
             return sanitizer.Sanitize(content);
         }
-    } 
+    }
 }

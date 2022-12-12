@@ -13,6 +13,17 @@ namespace RoomRentingApp.Core.Contracts
         /// <returns>A collection of room view model</returns>
         Task<IEnumerable<AllRoomsViewModel>> GetAllRoomsAsync();
 
+        /// <summary>
+        /// Retrieves all rooms from the database with sorting option and paging.
+        /// </summary>
+        /// <param name="categoryStatus">Name of the category status.</param>
+        /// <param name="categorySize">Name of the category size.</param>
+        /// <param name="searchTerm">The word that can be searched.</param>
+        /// <param name="town">The town name.</param>
+        /// <param name="sorting">Sorting enum.</param>
+        /// <param name="currentPage">The number of the current page.</param>
+        /// <param name="roomsPerPage">The number of rooms per page</param>
+        /// <returns>A room query model.</returns>
         Task<RoomsQueryModel> GetAllAsync(
             string? categoryStatus = null,
             string? categorySize = null,
@@ -144,7 +155,7 @@ namespace RoomRentingApp.Core.Contracts
 
 
         /// <summary>
-        /// Retrieves the room, remove current renter and save changes to the database.
+        /// Retrieves the wanted room, remove current renter and save changes to the database.
         /// </summary>
         /// <param name="roomId">Guid used to identify the room.</param>
         /// <returns>Error view model.</returns>
@@ -157,5 +168,19 @@ namespace RoomRentingApp.Core.Contracts
         /// <returns>Error view model.</returns>
         Task<ErrorViewModel> DeleteRoomAsync(Guid roomId);
 
+        /// <summary>
+        /// Retrieves a room from the database with a given room id.
+        /// </summary>
+        /// <param name="roomId">Guid used to identify the room.</param>
+        /// <returns>All rooms view model.</returns>
+        Task<AllRoomsViewModel> GetRoomInfoByRoomIdAsync(Guid roomId);
+
+        /// <summary>
+        /// Creates changes to a given room and saves the changes back to the database.
+        /// </summary>
+        /// <param name="roomId">Guid used to identify the room.</param>
+        /// <param name="model"></param>
+        /// <returns>Error view model.</returns>
+        Task<ErrorViewModel> EditAsync(Guid roomId, RoomCreateModel model);
     }
 }

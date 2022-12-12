@@ -57,11 +57,14 @@ namespace RoomRentingApp.Core.Services
             return rooms;
         }
 
-        public async Task<RoomsQueryModel> GetAllAsync(string? categoryStatus = null,
+        public async Task<RoomsQueryModel> GetAllAsync(
+            string? categoryStatus = null,
             string? categorySize = null,
             string? searchTerm = null,
             string? town = null,
-            RoomSorting sorting = RoomSorting.Price, int currentPage = 1, int roomsPerPage = 1)
+            RoomSorting sorting = RoomSorting.Price,
+            int currentPage = 1,
+            int roomsPerPage = 1)
         {
             var result = new RoomsQueryModel();
             var rooms = repo.AllReadonly<Room>()
@@ -70,7 +73,7 @@ namespace RoomRentingApp.Core.Services
             if (!string.IsNullOrEmpty(categoryStatus))
             {
                 rooms = rooms
-                    .Where(r => r.RoomCategory.RoomSize == categoryStatus);
+                    .Where(r => r.RoomCategory.LandlordStatus == categoryStatus);
             }
             if (!string.IsNullOrEmpty(categorySize))
             {
@@ -100,7 +103,7 @@ namespace RoomRentingApp.Core.Services
             };
 
             result.Rooms = await rooms
-                .Where(r=>r.IsActive)
+                .Where(r => r.IsActive)
                 .Skip((currentPage - 1) * roomsPerPage)
                 .Take(roomsPerPage)
                 .Select(r => new AllRoomServiceModel()
@@ -117,7 +120,7 @@ namespace RoomRentingApp.Core.Services
 
             return result;
         }
-         
+
 
         public async Task<IEnumerable<RoomCategoryViewModel>> GetCategoriesAsync()
         {
@@ -232,7 +235,7 @@ namespace RoomRentingApp.Core.Services
                 await repo.AddAsync(room);
                 await repo.SaveChangesAsync();
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return Guid.Empty;
             }
@@ -247,7 +250,7 @@ namespace RoomRentingApp.Core.Services
 
             if (room != null && room.RenterId != null)
             {
-                return new ErrorViewModel() {Message = RoomIsTaken};
+                return new ErrorViewModel() { Message = RoomIsTaken };
             }
 
             if (room == null)
@@ -265,9 +268,9 @@ namespace RoomRentingApp.Core.Services
             {
                 await repo.SaveChangesAsync();
             }
-            catch (Exception )
+            catch (Exception)
             {
-                return new ErrorViewModel() {Message = UnexpectedError };
+                return new ErrorViewModel() { Message = UnexpectedError };
             }
 
             return null;
@@ -318,7 +321,7 @@ namespace RoomRentingApp.Core.Services
             {
                 await repo.SaveChangesAsync();
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return new ErrorViewModel() { Message = UnexpectedErrorRating };
             }
@@ -358,7 +361,7 @@ namespace RoomRentingApp.Core.Services
         {
             return await repo.All<Room>()
                 .Where(r => r.LandlordId == landlordId)
-                .Where(r=>r.IsActive)
+                .Where(r => r.IsActive)
                 .Include(r => r.RoomCategory)
                 .Include(r => r.Town)
                 .Select(r => new AllRoomsViewModel()
@@ -380,7 +383,7 @@ namespace RoomRentingApp.Core.Services
                         RoomSize = r.RoomCategory.RoomSize
                     },
                     IsRented = r.RenterId != null,
-                    
+
                 }).ToListAsync();
         }
 
@@ -400,7 +403,7 @@ namespace RoomRentingApp.Core.Services
         {
             var room = await repo.GetByIdAsync<Room>(roomId);
 
-            if (room!= null && room.LandlordId == landlordId)
+            if (room != null && room.LandlordId == landlordId)
             {
                 return true;
             }
@@ -412,7 +415,7 @@ namespace RoomRentingApp.Core.Services
             var room = await repo.GetByIdAsync<Room>(roomId);
             if (room.RenterId == null)
             {
-                return new ErrorViewModel() {Message = RenterNotFound };
+                return new ErrorViewModel() { Message = RenterNotFound };
             }
             var renter = await repo.GetByIdAsync<Renter>(room.RenterId);
 
@@ -441,8 +444,65 @@ namespace RoomRentingApp.Core.Services
             }
             catch (Exception)
             {
-                return new ErrorViewModel() {Message = UnexpectedErrorDeleteRoom};
+                return new ErrorViewModel() { Message = UnexpectedErrorDeleteRoom };
             }
+            return null;
+        }
+
+        public async Task<AllRoomsViewModel> GetRoomInfoByRoomIdAsync(Guid roomId)
+        {
+            var room = await repo.AllReadonly<Room>()
+                .Where(r => r.Id == roomId && r.IsActive)
+                .Select(r => new AllRoomsViewModel()
+                {
+                    Id = r.Id,
+                    Address = r.Address,
+                    Categories = new RoomCategoryViewModel()
+                    {
+                        LandlordStatus = r.RoomCategory.LandlordStatus,
+                        RoomSize = r.RoomCategory.RoomSize
+                    },
+                    Description = r.Description,
+                    ImageUrl = r.ImageUrl,
+                    PricePerWeek = r.PricePerWeek,
+                    Town = r.Town.Name,
+                    IsRented = r.RenterId != null,
+
+                })
+                .FirstOrDefaultAsync();
+            if (room == null)
+            {
+                throw new ArgumentNullException(nameof(room), RoomNotFount);
+            }
+            return room;
+        }
+
+        public async Task<ErrorViewModel> EditAsync(Guid roomId, RoomCreateModel model)
+        {
+            var room = await repo.GetByIdAsync<Room>(roomId);
+
+            if (room == null)
+            {
+                return new ErrorViewModel(){Message = RoomNotFount};
+            }
+
+            room.Address = model.Address;
+            room.ImageUrl = model.ImageUrl;
+            room.PricePerWeek = model.PricePerWeek;
+            room.Description = model.Description;
+            room.RoomCategoryId = model.RoomCategoryId;
+            room.TownId = model.TownId;
+
+            try
+            {
+                await repo.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+               return new ErrorViewModel{Message = UnexpectedErrorEditRoom };
+            }
+
+
             return null;
         }
     }
