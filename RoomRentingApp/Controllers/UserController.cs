@@ -8,6 +8,9 @@ using RoomRentingApp.Infrastructure.Models;
 
 namespace RoomRentingApp.Controllers
 {
+    /// <summary>
+    /// The controller responsible for user management.
+    /// </summary>
     public class UserController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
@@ -19,6 +22,10 @@ namespace RoomRentingApp.Controllers
             this.signInManager = signInManager;
         }
 
+        /// <summary>
+        /// The 'Register' action for the controller.
+        /// </summary>
+        /// <returns>A register view with an empty 'RegisterViewModel'.</returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register()
@@ -33,6 +40,11 @@ namespace RoomRentingApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// The 'Register' action for the controller. 
+        /// </summary>
+        /// <param name="model">The 'RegisterViewModel' for validation.</param>
+        /// <returns>Redirect to 'Login' page if successful, or to the same view if error occurs.</returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -63,6 +75,10 @@ namespace RoomRentingApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// The 'Login' action for the controller.
+        /// </summary>
+        /// <returns>A login view with an empty LoginViewModel.</returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login()
@@ -77,6 +93,11 @@ namespace RoomRentingApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// The 'Login' action for the controller. 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Redirect to Home if successful, or to the same view if error occurs.</returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -103,7 +124,10 @@ namespace RoomRentingApp.Controllers
             return View(model);
         }
 
-
+        /// <summary>
+        /// The log out action for the controller.
+        /// </summary>
+        /// <returns>Redirect to the home page.</returns>
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();

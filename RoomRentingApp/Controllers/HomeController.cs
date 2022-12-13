@@ -14,7 +14,7 @@ namespace RoomRentingApp.Controllers
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ILandlordService landlordService;
-
+        
         public HomeController(UserManager<ApplicationUser> userManager,
             ILandlordService landlordService)
         {
@@ -22,6 +22,10 @@ namespace RoomRentingApp.Controllers
             this.landlordService = landlordService;
         }
 
+        /// <summary>
+        /// The 'Index' action for the controller.
+        /// </summary>
+        /// <returns>The home page view.</returns>
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
@@ -68,6 +72,11 @@ namespace RoomRentingApp.Controllers
             return this.View();
         }
 
+        /// <summary>
+        /// The 'Error' action for the controller.
+        /// </summary>
+        /// <param name="errors"></param>
+        /// <returns>Error page</returns>
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error(ErrorViewModel errors)
         {

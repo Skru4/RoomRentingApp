@@ -14,6 +14,9 @@ using static RoomRentingApp.Core.Constants.UserConstants;
 
 namespace RoomRentingApp.Controllers
 {
+    /// <summary>
+    /// The controller responsible for renter management.
+    /// </summary>
     public class RenterController : BaseController
     {
         private readonly IRenterService renterService;
@@ -30,6 +33,10 @@ namespace RoomRentingApp.Controllers
             this.roleService = roleService;
         }
 
+        /// <summary>
+        /// The 'Rent' action for the controller.
+        /// </summary>
+        /// <returns>A view for becoming renter. Or redirect to 'Home' page if error occurs.</returns>
         [HttpGet]
 		public async Task<IActionResult> Rent()
 		{
@@ -61,7 +68,11 @@ namespace RoomRentingApp.Controllers
             return View(model);
         }
 
-
+        /// <summary>
+        /// The 'Rent' action for the controller.
+        /// </summary>
+        /// <param name="model">The BecomeRenterModel for validation.</param>
+        /// <returns>Redirect to 'All' page if successful, or to 'Index' if error occurs. </returns>
         [HttpPost]
         public async Task<IActionResult> Rent(BecomeRenterModel model)
         {
@@ -102,6 +113,10 @@ namespace RoomRentingApp.Controllers
             return RedirectToAction("All", "Room");
         }
 
+        /// <summary>
+        /// The 'Contacts' action for the controller.
+        /// </summary>
+        /// <returns>A view with information of all the landlords.</returns>
         [HttpGet]
         public async Task<IActionResult> Contacts()
         {

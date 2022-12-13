@@ -13,6 +13,9 @@ using static RoomRentingApp.Core.Constants.UserConstants.Roles;
 
 namespace RoomRentingApp.Controllers
 {
+    /// <summary>
+    /// The controller responsible for managing rooms.
+    /// </summary>
     public class RoomController : BaseController
     {
         private readonly IRoomService roomService;
@@ -28,6 +31,11 @@ namespace RoomRentingApp.Controllers
             this.renterService = renterService;
         }
 
+        /// <summary>
+        /// The 'All' action for the controller.
+        /// </summary>
+        /// <param name="query">The room query model.</param>
+        /// <returns>A view with a collection of all rooms.</returns>
         [HttpGet]
         public async Task<IActionResult> All([FromQuery] AllRoomsQueryModel query)
         {
@@ -50,6 +58,10 @@ namespace RoomRentingApp.Controllers
             return View(query);
         }
 
+        /// <summary>
+        /// The 'Add' action for the controller.
+        /// </summary>
+        /// <returns>A view for room adding with a blank room create model</returns>
         [HttpGet]
         [Authorize(Roles = LandlordRole)]
         public async Task<IActionResult> Add()
@@ -67,6 +79,11 @@ namespace RoomRentingApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// The 'Add' action for the controller.
+        /// </summary>
+        /// <param name="model">The room create model for validation</param>
+        /// <returns>The same page if model is invalid, or redirect to the previous page</returns>
         [HttpPost]
         [Authorize(Roles = LandlordRole)]
         public async Task<IActionResult> Add(RoomCreateModel model)
@@ -100,6 +117,11 @@ namespace RoomRentingApp.Controllers
             return RedirectToAction(nameof(All), new { roomId });
         }
 
+        /// <summary>
+        /// The 'Info' action for the controller.
+        /// </summary>
+        /// <param name="roomId">Guid of the requested room</param>
+        /// <returns>A view with more room information.</returns>
         public async Task<IActionResult> Info(Guid roomId)
         {
             var userId = User.Id();
@@ -109,6 +131,11 @@ namespace RoomRentingApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// The 'Rent Room' action for the controller.
+        /// </summary>
+        /// <param name="id">The Guid of the targeted room</param>
+        /// <returns>Error message or successful message and redirect to 'All' page.</returns>
         [Authorize(Roles = RenterRole)]
         [HttpPost]
         public async Task<IActionResult> RentRoom(Guid id)
@@ -140,6 +167,11 @@ namespace RoomRentingApp.Controllers
             return RedirectToAction("All", "Room");
         }
 
+        /// <summary>
+        /// The 'Rating' action for the controller.
+        /// </summary>
+        /// <param name="id">The Guid used to retrieve the needed room.</param>
+        /// <returns>A view for rating the selected room.</returns>
         [HttpGet]
         [Authorize(Roles = RenterRole)]
         public async Task<IActionResult> Rating([FromRoute] Guid id)
@@ -151,6 +183,11 @@ namespace RoomRentingApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// The 'Rating' action for the controller.
+        /// </summary>
+        /// <param name="model">The RatingViewModel for validation.</param>
+        /// <returns>Error message or successful message and redirect to 'All' page.</returns>
         [HttpPost]
         [Authorize(Roles = RenterRole)]
         public async Task<IActionResult> Rating(RatingRoomViewModel model)
@@ -167,6 +204,12 @@ namespace RoomRentingApp.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        /// <summary>
+        /// The 'Rented' action for the controller.
+        /// </summary>
+        /// <returns>
+        /// A view with the renter's rented room if he have one.Or redirect to 'Home' if error occurs.
+        /// </returns>
         [Authorize(Roles = RenterRole)]
         public async Task<IActionResult> Rented()
         {
@@ -197,6 +240,10 @@ namespace RoomRentingApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// The 'Rentals' action for the controller.
+        /// </summary>
+        /// <returns>A view with the landlord's created rooms.</returns>
         [Authorize(Roles = LandlordRole)]
         public async Task<IActionResult> Rentals()
         {
@@ -212,6 +259,11 @@ namespace RoomRentingApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// The 'Leave' action for the controller.
+        /// </summary>
+        /// <param name="id">The Guid used to retrieve the room.</param>
+        /// <returns>Redirects to the 'All' view.</returns>
         [HttpPost]
         [Authorize(Roles = RenterRole)]
         public async Task<IActionResult> Leave(Guid id)
@@ -237,6 +289,11 @@ namespace RoomRentingApp.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        /// <summary>
+        /// The 'Delete' action for the controller.
+        /// </summary>
+        /// <param name="id">The Guid used to retrieve the room.</param>
+        /// <returns>Upon deletion or error redirects to the 'Rentals' view.</returns>
         [HttpPost]
         [Authorize(Roles = LandlordRole)]
         public async Task<IActionResult> Delete(Guid id)
@@ -266,6 +323,11 @@ namespace RoomRentingApp.Controllers
             return RedirectToAction(nameof(Rentals));
         }
 
+        /// <summary>
+        /// The 'Edit' action of the controller.
+        /// </summary>
+        /// <param name="id">The Guid used to retrieve the room. </param>
+        /// <returns>A view for room editing with filled RoomCreateModel model.</returns>
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -296,6 +358,12 @@ namespace RoomRentingApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// The 'Edit' action of the controller.
+        /// </summary>
+        /// <param name="id">The Guid used to retrieve the room.</param>
+        /// <param name="model">The RoomCreateModel for validation.</param>
+        /// <returns>The same page if model is invalid, or back to the previous page.</returns>
         [HttpPost]
         public async Task<IActionResult> Edit(Guid id, RoomCreateModel model)
         {
