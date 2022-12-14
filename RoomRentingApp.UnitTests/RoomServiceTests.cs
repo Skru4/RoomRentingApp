@@ -108,7 +108,7 @@
         }
 
         [Test]
-        public async Task Succeed_CreateNewRoom() 
+        public async Task Succeed_CreateNewRoom()
         {
             var landlordId = Guid.Parse("caccc889-f2ec-4538-9c3b-90540dee23f2");
             var model = new RoomCreateModel()
@@ -116,7 +116,7 @@
                 Address = "Some address",
                 Description = "Some description",
                 ImageUrl = "Some url",
- 
+
             };
             await roomService.CreateRoomAsync(model, landlordId);
             Assert.That((await roomService.GetRoomByLandlordId(landlordId)).ToList()[0], Is.Not.Null);
@@ -307,7 +307,7 @@
 
             RoomCreateModel model = new RoomCreateModel()
             {
-                 Address = "Edited address"
+                Address = "Edited address"
             };
 
             var result = await roomService.EditAsync(roomId, model);
@@ -332,7 +332,7 @@
             Assert.That(result != null);
 
         }
-    
+
         [Test]
         public async Task RentRoom_Succeed()
         {
@@ -369,6 +369,12 @@
         }
 
 
+        [TearDown]
+        public void TearDown()
+        {
+            dbContext.Dispose();
+
+        }
 
         private async Task SeedAsync(IRepository repo)
         {

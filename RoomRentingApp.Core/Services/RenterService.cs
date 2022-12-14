@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using RoomRentingApp.Core.Constants;
 using RoomRentingApp.Core.Contracts;
 using RoomRentingApp.Core.Models.Error;
 using RoomRentingApp.Infrastructure.Data.Common;
@@ -59,7 +59,7 @@ namespace RoomRentingApp.Core.Services
 
             if (renter == null)
             {
-                throw new ArgumentNullException(nameof(renter));
+                throw new ArgumentNullException(nameof(renter), RenterNotFound);
             }
             return renter;
         }
@@ -74,8 +74,14 @@ namespace RoomRentingApp.Core.Services
 
         public async Task<Guid> GetRenterIdAsync(string userId)
         {
-            return (await repo.AllReadonly<Renter>()
-                .FirstAsync(r => r.UserId == userId)).Id;
+            var renter = (await repo.AllReadonly<Renter>()
+                .FirstOrDefaultAsync(r => r.UserId == userId));
+
+            if (renter == null)
+            {
+                throw new ArgumentNullException(nameof(renter), RenterNotFound);
+            }
+            return renter.Id;
         }
 
         public async Task<Renter> GetRenterWithRenterId(Guid renterId)
@@ -85,7 +91,7 @@ namespace RoomRentingApp.Core.Services
                 .FirstOrDefaultAsync();
             if (renter == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(renter), RenterNotFound);
             }
 
             return renter;

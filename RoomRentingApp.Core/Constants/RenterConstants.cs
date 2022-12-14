@@ -15,5 +15,7 @@
         public const string SuccessfulLeave = "You have left the room successfuly!";
 
         public const string UnexpectedErrorCreate = "Unexpected error. You cant create new renter";
+
+        public const string RenterNotFound = "Renter not found";
     }
 }
