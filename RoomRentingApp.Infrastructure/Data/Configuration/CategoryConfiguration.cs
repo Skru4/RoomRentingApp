@@ -9,7 +9,7 @@ namespace RoomRentingApp.Infrastructure.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<RoomCategory> builder)
         {
-            builder.HasData(CreateCategories());
+           // builder.HasData(CreateCategories());
         }
 
         private List<RoomCategory> CreateCategories()

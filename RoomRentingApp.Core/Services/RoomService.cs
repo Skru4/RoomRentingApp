@@ -235,8 +235,9 @@ namespace RoomRentingApp.Core.Services
                 await repo.AddAsync(room);
                 await repo.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                error.Message = e.Message;
                 return Guid.Empty;
             }
 
@@ -330,7 +331,7 @@ namespace RoomRentingApp.Core.Services
 
         public async Task<AllRoomsViewModel> GetRoomByRenterId(Guid renterId)
         {
-            return await repo.All<Room>()
+            var room = await repo.All<Room>()
                 .Where(r => r.RenterId == renterId)
                 .Where(r => r.IsActive)
                 .Include(r => r.RoomCategory)
@@ -355,7 +356,12 @@ namespace RoomRentingApp.Core.Services
                     },
                     IsRented = r.RenterId != null
 
-                }).FirstAsync();
+                }).FirstOrDefaultAsync();
+            if (room == null)
+            {
+                throw new ArgumentException(RoomNotFount);
+            }
+            return room;
         }
         public async Task<IEnumerable<AllRoomsViewModel>> GetRoomByLandlordId(Guid landlordId)
         {

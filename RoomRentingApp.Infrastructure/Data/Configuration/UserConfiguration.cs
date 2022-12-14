@@ -10,7 +10,7 @@ namespace RoomRentingApp.Infrastructure.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            builder.HasData(CreateUsers());
+           // builder.HasData(CreateUsers());
         }
 
         private List<ApplicationUser> CreateUsers()

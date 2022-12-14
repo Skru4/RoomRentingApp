@@ -9,7 +9,7 @@ namespace RoomRentingApp.Infrastructure.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Rating> builder)
         {
-            builder.HasData(CreateRating());
+            //builder.HasData(CreateRating());
         }
 
         private List<Rating> CreateRating()
