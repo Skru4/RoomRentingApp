@@ -102,11 +102,9 @@ namespace RoomRentingApp.UnitTests
             Assert.That(Assert.CatchAsync<ArgumentNullException>(async () => await renterService.GetRenterIdAsync(userId))!.Message, Is.EqualTo("Renter not found (Parameter 'renter')"));
         }
 
-        //[Test]
+        [Test]
         public async Task CreateNewRenter_Succeed()
         {
-            var repo = serviceProvider.GetService<IRepository>();
-
             var userId = "UserId5";
             BecomeRenterModel model = new BecomeRenterModel()
             {
@@ -116,10 +114,43 @@ namespace RoomRentingApp.UnitTests
 
             var error = await renterService.CreateNewRenterAsync(userId, model.PhoneNumber, model.Job);
 
-            var expectedRenter = await repo!.AllReadonly<Renter>()
-                .Where(r => r.UserId == userId)
-                .FirstOrDefaultAsync();
-            Assert.That(expectedRenter.Job == "some job");
+            Assert.That(error != null);
+        }
+
+
+        [Test]
+        [TestCase("phone number 1")]
+        [TestCase("phone number 2")]
+        public async Task UserPhoneNumberExist_Succeed(string phoneNumber)
+        {
+            Assert.That((await renterService.UserPhoneNumberExistsAsync(phoneNumber)), Is.True);
+        }
+
+        [Test]
+        [TestCase("0487651")]
+        [TestCase("143256")]
+        public async Task UserPhoneNumberExist_ReturnFalseWithInvalidInput(string phoneNumber)
+        {
+            Assert.That((await renterService.UserPhoneNumberExistsAsync(phoneNumber)), Is.False);
+        }
+
+        [Test]
+        public async Task GetRenterWithRenterId_Succeed()
+        {
+            var renter = await renterService.GetRenterWithRenterId(new Guid("fe46ac7a-93a1-4c20-9044-4c5532af2c70"));
+
+            Assert.That(renter.Job == "Some job");
+            Assert.That(renter != null);
+        }
+
+        [Test]
+        public async Task GetRenterWithRenterId_ThrowExceptionWithInvalidInput()
+        {
+
+            Assert.That(
+                async () => await renterService.GetRenterWithRenterId(Guid.NewGuid()),
+                Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(Assert.CatchAsync<ArgumentNullException>(async () => await renterService.GetRenterWithRenterId(Guid.NewGuid()))!.Message, Is.EqualTo("Renter not found (Parameter 'renter')"));
         }
 
 

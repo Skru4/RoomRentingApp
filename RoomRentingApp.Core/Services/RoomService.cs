@@ -97,7 +97,7 @@ namespace RoomRentingApp.Core.Services
 
             rooms = sorting switch
             {
-                RoomSorting.Price => rooms.OrderBy(r => r.PricePerWeek),
+                RoomSorting.Price => rooms.OrderBy(r => (int)(r.PricePerWeek)),
                 RoomSorting.Ratings => rooms.OrderByDescending(r => r.Ratings.Average(x => x.RatingDigit)),
                 _ => rooms.OrderBy(r => r.RenterId)
             };

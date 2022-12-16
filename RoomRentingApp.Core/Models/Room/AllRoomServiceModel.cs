@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RoomRentingApp.Core.Models.Room
 {
@@ -14,6 +16,7 @@ namespace RoomRentingApp.Core.Models.Room
         public string ImageUrl { get; set; } = null!;
 
         [Display(Name = "Price per week")]
+        [Column(TypeName = "money")]
         public decimal PricePerWeek { get; set; }
 
         [Display(Name = "Is Rented")]

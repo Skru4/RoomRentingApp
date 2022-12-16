@@ -27,6 +27,16 @@
         }
 
         [Test]
+        public async Task SucceedGetAllRoomsSorting()
+        {
+            var result = await roomService.GetAllAsync();
+
+
+            Assert.That(result.Rooms.Any(r=>r.Address == "TestAddress1"));
+            Assert.That(result.TotalRoomsCount == 3);
+        }
+
+        [Test]
         public async Task SucceedGetAllRooms()
         {
             var rooms = await roomService.GetAllRoomsAsync();
@@ -246,6 +256,16 @@
             var result = await roomService.IsRoomAddedByLandlordWithId(roomId, landlordId);
 
             Assert.That(result, Is.True);
+        }
+        [Test]
+        public async Task IsRoomAddedByLandlordWithId_DoNotSucceed()
+        {
+            var roomId = Guid.Parse("caccc889-f2ec-4538-9c3b-90540dee5555");
+            var landlordId = Guid.Parse("caccc889-f2ec-4538-9c3b-90540dee23f2");
+
+            var result = await roomService.IsRoomAddedByLandlordWithId(roomId, landlordId);
+
+            Assert.That(result, Is.False);
         }
 
         [Test]
