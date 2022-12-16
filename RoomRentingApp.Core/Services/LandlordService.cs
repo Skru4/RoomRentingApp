@@ -56,13 +56,14 @@ namespace RoomRentingApp.Core.Services
 
         public async Task<Guid> GetLandlordIdAsync(string userId)
         {
-            var landlordId = (await repo.AllReadonly<Landlord>()
-                .FirstOrDefaultAsync(l => l.UserId == userId)).Id;
-
-            if (landlordId == Guid.Empty)
+            var landlord = (await repo.AllReadonly<Landlord>()
+                .FirstOrDefaultAsync(l => l.UserId == userId));
+            if (landlord == null)
             {
-                throw new ArgumentException(CannotFind);
+                throw new ArgumentNullException(nameof(landlord), CannotFind);
             }
+
+            var landlordId = landlord.Id;
 
             return landlordId;
         }

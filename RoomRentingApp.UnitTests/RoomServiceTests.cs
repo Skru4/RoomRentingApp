@@ -132,6 +132,22 @@
             Assert.That((await roomService.GetRoomByLandlordId(landlordId)).ToList()[0], Is.Not.Null);
         }
         [Test]
+        public async Task CreateNewRoom_DoNotSucceed()
+        {
+            var invalidLandlordId = Guid.Parse("caccc889-f2ec-4538-9c3b-90540dee6666");
+            var model = new RoomCreateModel()
+            {
+                Address = "Some address",
+                Description = "Some description",
+                ImageUrl = "Some url",
+
+            };
+            var error = await roomService.CreateRoomAsync(model, invalidLandlordId);
+            Assert.That(error == Guid.Empty);
+        }
+
+
+        [Test]
         public async Task Succeed_RoomExistReturnTrue()
         {
             var roomId = Guid.Parse("caccc889-f2ec-4538-9c3b-90540dee23f1");
@@ -193,6 +209,7 @@
 
             Assert.That(error, Is.Null);
         }
+
         [Test]
         public async Task GetRoomByRenterId_Succeed()
         {
@@ -292,9 +309,9 @@
         [Test]
         public async Task LeaveRoom_ThrowsException_WhenRoomHaveNoRenter()
         {
-            var roomId = Guid.Parse("caccc889-f2ec-4538-9c3b-90540dee23f4");
+            var notRentedRoomId = Guid.Parse("caccc889-f2ec-4538-9c3b-90540dee23f4");
 
-            var result = (await roomService.LeaveRoomAsync(roomId));
+            var result = (await roomService.LeaveRoomAsync(notRentedRoomId));
 
             Assert.That(result.Message == "Renter does not found");
             Assert.That(result != null);
@@ -332,8 +349,22 @@
 
             var result = await roomService.EditAsync(roomId, model);
 
-            Assert.That(result, Is.Not.Null);
             Assert.That((await roomService.GetRoomByIdAsync(roomId)).Address == "Edited address");
+
+        }
+        [Test]
+        public async Task EditRoom_NotSucceed()
+        {
+            var roomId = Guid.Parse("caccc889-f2ec-4538-9c3b-90540dee23f1");
+
+            RoomCreateModel model = new RoomCreateModel()
+            {
+                Address = "Ed"
+            };
+
+            var result = await roomService.EditAsync(roomId, model);
+
+            Assert.That(result.Message == "Unexpected error. You cant edit this room");
 
         }
         [Test]
@@ -365,6 +396,7 @@
             Assert.That(result == null);
             Assert.That((await roomService.IsRoomRentedAsync(roomId)));
         }
+
         [Test]
         public async Task RentRoom_DoNotSucceed_RoomAlreadyHaveRenter()
         {
