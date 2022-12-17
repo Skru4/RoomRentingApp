@@ -96,15 +96,7 @@ namespace RoomRentingApp.UnitTests
                Throws.Exception.TypeOf<ArgumentNullException>());
             Assert.That(Assert.CatchAsync<ArgumentNullException>(async () => await adminService.DeleteUserAsync("Invalid"))!.Message, Is.EqualTo("User cannot be found (Parameter 'user')"));
         }
-        [Test]
-        public async Task Delete()
-        {
-            var user = await roleService.FindUserByIdAsync("userId1");
 
-            await adminService.DeleteUserAsync(user.Id);
-
-            Assert.That((await roleService.FindUserByIdAsync(user.Id) == null));
-        }
 
 
 

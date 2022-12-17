@@ -20,6 +20,16 @@
   else
   {
 	  <h1 class="text-center">Welcome, <b>@this.ViewBag.PersonName!</b></h1>
+	  
+		@if (User.IsInRole("Landlord"))
+		{
+			<h6 class="text-center">(landlord)</h6>
+		}
+		@if (User.IsInRole("Renter"))
+		{
+			<h6 class="text-center">(Renter)</h6>
+		}
+	 
 	  <hr class="bg-secondary" />
 	  <h3 class="mt-4 text-secondary text-center">We over at <b style="color:darkslateblue;">Room Renting App</b> wish you a very safe and happy journey with us!</h3>
 	  <h5 class="text-muted text-center">Explore our cities</h5>

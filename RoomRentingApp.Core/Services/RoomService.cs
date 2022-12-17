@@ -124,15 +124,16 @@ namespace RoomRentingApp.Core.Services
 
         public async Task<IEnumerable<RoomCategoryViewModel>> GetCategoriesAsync()
         {
-            return await repo.All<RoomCategory>()
+            var catList =  await repo.All<RoomCategory>()
                 .Select(c => new RoomCategoryViewModel()
                 {
                     Id = c.Id,
                     LandlordStatus = c.LandlordStatus,
                     RoomSize = c.RoomSize
+                
                 })
                 .ToListAsync();
-
+            return catList;
         }
 
         public async Task<IEnumerable<TownViewModel>> GetTownsAsync()
@@ -225,22 +226,19 @@ namespace RoomRentingApp.Core.Services
                 LandlordId = lanlordId,
                 RoomCategoryId = model.RoomCategoryId,
                 TownId = model.TownId,
+                IsActive = true,
                 Id = model.Id,
-                IsActive = true
-
             };
-
             try
             {
                 await repo.AddAsync(room);
                 await repo.SaveChangesAsync();
+
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                error.Message = e.Message;
                 return Guid.Empty;
             }
-
 
             return room.Id;
         }
@@ -489,7 +487,7 @@ namespace RoomRentingApp.Core.Services
 
             if (room == null)
             {
-                return new ErrorViewModel(){Message = RoomNotFount};
+                return new ErrorViewModel() { Message = RoomNotFount };
             }
 
             room.Address = model.Address;
@@ -505,7 +503,7 @@ namespace RoomRentingApp.Core.Services
             }
             catch (Exception)
             {
-               return new ErrorViewModel{Message = UnexpectedErrorEditRoom };
+                return new ErrorViewModel { Message = UnexpectedErrorEditRoom };
             }
 
 

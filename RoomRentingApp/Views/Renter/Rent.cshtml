@@ -1,10 +1,10 @@
 ﻿@model BecomeRenterModel
 
 @{
-	ViewBag.Ttile = "Become a Renter and look for free rooms";
+	ViewBag.Title = "Become a Renter and look for free rooms";
 }
 
-<h2 class="text-center">@ViewBag.Title</h2>
+<h2 style="margin-top:50px" class="text-center">@ViewBag.Title</h2>
 <hr />
 
 @if (!ViewData.ModelState.IsValid && ViewData.ModelState["Error"] != null)

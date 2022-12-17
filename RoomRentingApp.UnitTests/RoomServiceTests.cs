@@ -129,7 +129,7 @@
 
             };
             await roomService.CreateRoomAsync(model, landlordId);
-            Assert.That((await roomService.GetRoomByLandlordId(landlordId)).ToList()[0], Is.Not.Null);
+            Assert.That((await roomService.GetRoomByLandlordId(landlordId)), Is.Not.Null);
         }
         [Test]
         public async Task CreateNewRoom_DoNotSucceed()

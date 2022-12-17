@@ -16,7 +16,6 @@ namespace RoomRentingApp.Core.Models.Room
         public string ImageUrl { get; set; } = null!;
 
         [Display(Name = "Price per week")]
-        [Column(TypeName = "money")]
         public decimal PricePerWeek { get; set; }
 
         [Display(Name = "Is Rented")]

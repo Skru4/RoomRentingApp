@@ -23,7 +23,7 @@
         public const int AddressMinLen = 5;
         public const int AddressMaxLen = 70;
         public const int DescriptionMinLen = 10;
-        public const int DescriptionMaxLen = 100;
+        public const int DescriptionMaxLen = 200;
 
         public const int ImageUrlMinLen = 10;
         public const int ImageUrlMaxLen = 150;
