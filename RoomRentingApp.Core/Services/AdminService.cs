@@ -9,7 +9,7 @@ using RoomRentingApp.Core.Models.Town;
 using RoomRentingApp.Core.Models.User;
 using RoomRentingApp.Infrastructure.Data.Common;
 using RoomRentingApp.Infrastructure.Models;
-
+using System.Runtime.CompilerServices;
 using static RoomRentingApp.Core.Constants.UserConstants;
 
 namespace RoomRentingApp.Core.Services
@@ -153,6 +153,23 @@ namespace RoomRentingApp.Core.Services
                     PhoneNumber = r.PhoneNumber,
                 }).ToListAsync());
 
+            var renterIds = result.Select(r=>r.UserId).ToList();
+            var landlordIds = result.Select(l => l.UserId).ToList();
+
+            result.AddRange(await repo.AllReadonly<ApplicationUser>()
+                .Where(u=>!renterIds.Contains(u.Id))
+                .Where(u=>!landlordIds.Contains(u.Id))
+                .Where(u=>u.Id != "87dfab83-518c-4183-bd5b-0433986d768f")
+                .Select(u => new AllUsersServiceModel()
+                {
+                    UserId = u.Id,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    FullName = $"{u.FirstName} {u.LastName}",
+                    Username = u.UserName,
+                    IsLandlord = false,
+                    IsRenter = false
+                }).ToListAsync());
             return result;
         }
 
