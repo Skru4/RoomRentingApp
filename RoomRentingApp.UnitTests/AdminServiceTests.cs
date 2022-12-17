@@ -1,13 +1,20 @@
-﻿using RoomRentingApp.Core.Contracts;
-using RoomRentingApp.Core.Services;
+﻿using Microsoft.AspNetCore.Identity;
+using Moq;
+using RoomRentingApp.UnitTests.Mocks;
 
 namespace RoomRentingApp.UnitTests
 {
-    public class LandlordServiceTests
+    public class AdminServiceTests
     {
+        private Mock<UserManager<ApplicationUser>> mockUserManager;
+        private Mock<SignInManager<ApplicationUser>> mockSignInManager;
+        private Mock<RoleManager<IdentityRole>> mockRoleManager;
         private ServiceProvider serviceProvider;
         private InMemoryDbContext dbContext;
+        private IAdminService adminService;
         private ILandlordService landlordService;
+        private IRenterService renterService;
+        private IRoleService roleService;
 
         [SetUp]
         public async Task SetUp()
@@ -18,138 +25,88 @@ namespace RoomRentingApp.UnitTests
             serviceProvider = serviceCollection
                 .AddSingleton(sp => dbContext.CreateContext())
                 .AddSingleton<IRepository, Repository>()
+                .AddSingleton<IAdminService, AdminService>()
                 .AddSingleton<ILandlordService, LandlordService>()
+                .AddSingleton<IRenterService, RenterService>()
+                .AddSingleton<IRoleService, RoleService>()
                 .BuildServiceProvider();
 
             var repo = serviceProvider.GetService<IRepository>();
-
+            mockUserManager = UserManagerMock.MockUserManager();
+            mockRoleManager = RoleManagerMock.GetMockRoleManager();
+            mockSignInManager = SignInManagerMock.MockSignInManager();
             await SeedAsync(repo!);
+            roleService = new RoleService(mockRoleManager.Object, mockUserManager.Object, mockSignInManager.Object, repo!);
+            landlordService = new LandlordService(repo!);
+            renterService = new RenterService(repo!);
 
-            landlordService = serviceProvider.GetService<ILandlordService>()!;
+            adminService = new AdminService(repo!, roleService, renterService, landlordService);
         }
 
         [Test]
-        [TestCase("userId3")]
-        [TestCase("userId4")]
-        public async Task UserExistById_Succeed(string userId)
+        public async Task GetAllRoomsAsync_Succeed()
         {
-            var result = await landlordService.UserExistByIdAsync(userId);
+            var rooms = await adminService.GetAllRoomsAsync();
+            var roomsList = rooms.ToList();
 
-            Assert.That(result, Is.True);
+            Assert.That(roomsList.Any());
+            Assert.That(roomsList.Count() == 2);
+            Assert.True(roomsList.Any(r => r.Description == "TestDescription1"));
         }
+
         [Test]
-        [TestCase("userId1")]
-        [TestCase("userId2")]
-        public async Task UserExistById_FailsWithInvalidId(string userId)
+        public async Task GetAllLandlordsAsync_Succeed()
         {
-            var result = await landlordService.UserExistByIdAsync(userId);
+            var landlords = await adminService.GetAllLandlordsAsync();
+            var landlordsList = landlords.ToList();
 
-            Assert.That(result, Is.False);
+            Assert.That(landlordsList.Any());
+            Assert.That(landlordsList.Count() == 2);
+            Assert.True(landlordsList.Any(l => l.Id == Guid.Parse("6c5e6f79-2108-42b0-b49a-0090d605738d")));
         }
+
+
         [Test]
-        [TestCase("088888")]
-        [TestCase("077777")]
-        public async Task UserPhoneNumberExist_Succeed(string phoneNumber)
+        public async Task GetAllRentersAsync_Succeed()
         {
-            Assert.That((await landlordService.UserPhoneNumberExistsAsync(phoneNumber)), Is.True);
+            var renters = await adminService.GetAllRentersAsync();
+            var rentersList = renters.ToList();
+
+            Assert.That(rentersList.Any());
+            Assert.That(rentersList.Count() == 2);
+            Assert.True(rentersList.Any(r => r.Id == Guid.Parse("fe46ac7a-93a1-4c20-9044-4c5532af2c70")));
         }
 
         [Test]
-        [TestCase("0487651")]
-        [TestCase("143256")]
-        public async Task UserPhoneNumberExist_ReturnFalseWithInvalidInput(string phoneNumber)
+        public async Task GetAllUsersAsync_Succeed()
         {
-            Assert.That((await landlordService.UserPhoneNumberExistsAsync(phoneNumber)), Is.False);
+            var users = await adminService.GetAllUsersAsync();
+            var usersList = users.ToList();
+
+            Assert.That(usersList.Any());
+            Assert.That(usersList.Count() == 5);
+            Assert.True(usersList.Any(r => r.UserId == "userId2"));
         }
 
         [Test]
-        [TestCase("email3")]
-        [TestCase("email4")]
-        public async Task UserEmailExistAsync_Succeed(string email)
-        {
-            Assert.That((await landlordService.UserEmailExistAsync(email)), Is.True);
-        }
-        [Test]
-        [TestCase("invalidEmail")]
-        [TestCase("invalidEmail2")]
-        public async Task UserEmailExistAsync_DoNotSucceedWithInvalidData(string email)
-        {
-            Assert.That((await landlordService.UserEmailExistAsync(email)), Is.False);
-        }
-
-        [Test]
-        [TestCase("userId3")]
-        public async Task GetLandlordId_Succeed(string userId)
-        {
-            var result = await landlordService.GetLandlordIdAsync(userId);
-
-            Assert.That(result != Guid.Empty);
-            Assert.That(result == Guid.Parse("6c5e6f79-2108-42b0-b49a-0090d605738d"));
-        }
-
-        [Test]
-        [TestCase("userId1")]
-        public async Task GetLandlordId_ThrowsExceptionWithInvalidData(string userId)
+        public async Task DeleteUserAsync_ThrowsErrorWithInvalidId()
         {
             Assert.That(
-                async () => await landlordService.GetLandlordIdAsync(userId),
-                Throws.Exception.TypeOf<ArgumentNullException>());
-            Assert.That(Assert.CatchAsync<ArgumentNullException>(async () => await landlordService.GetLandlordIdAsync(userId))!.Message, Is.EqualTo("Cannot be found (Parameter 'landlord')"));
-        }
-
-        [Test]
-        public async Task GetAllLandlords_Succeed()
-        {
-            var result = await landlordService.GetAllLandlordsAsync();
-            var landlordsList = result.ToList();
-
-            Assert.That(landlordsList.Count, Is.EqualTo(2));
-            Assert.That(landlordsList.Any(x => x.FirstName == "Name1"));
-
-        }
-
-        [Test]
-        [TestCase("userId3")]
-        public async Task GetLandlordWithUserId_Succeed(string userId)
-        {
-            var landlord = await landlordService.GetLandlordWithUserIdAsync(userId);
-
-            Assert.That(landlord.Id, Is.EqualTo(Guid.Parse("6c5e6f79-2108-42b0-b49a-0090d605738d")));
-        }
-
-        [Test]
-        [TestCase("userId1")]
-        public async Task GetLandlordWithUserId_ThrowsExceptionWithInvalidData(string userId)
-        {
-            Assert.That(
-                async () => await landlordService.GetLandlordWithUserIdAsync(userId),
-                Throws.Exception.TypeOf<ArgumentNullException>());
-            Assert.That(Assert.CatchAsync<ArgumentNullException>(async () => await landlordService.GetLandlordWithUserIdAsync(userId))!.Message, Is.EqualTo("Cannot be found (Parameter 'landlord')"));
-        }
-
-        [Test]
-        [TestCase("userId5")]
-        public async Task CreateLandlord_Succeed(string userId)
-        {
-            var result = await landlordService.CreateNewLandlordAsync(userId, "1234", "TestName", "2ndTestName");
-
-            Assert.That(await landlordService.UserExistByIdAsync("userId5"));
+               async () => await adminService.DeleteUserAsync("Invalid"),
+               Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(Assert.CatchAsync<ArgumentNullException>(async () => await adminService.DeleteUserAsync("Invalid"))!.Message, Is.EqualTo("User cannot be found (Parameter 'user')"));
         }
         [Test]
-        public async Task CreateLandlord_DoNotSucceed_WithInvalidUser()
+        public async Task Delete()
         {
-            var result = await landlordService.CreateNewLandlordAsync("userIdInvalid", "1234", "TestName", "2ndTestName");
+            var user = await roleService.FindUserByIdAsync("userId1");
 
-            Assert.That(result.Message == "Unexpected error. You cant create new landlord");
+            await adminService.DeleteUserAsync(user.Id);
+
+            Assert.That((await roleService.FindUserByIdAsync(user.Id) == null));
         }
 
 
-        [TearDown]
-        public void TearDown()
-        {
-            dbContext.Dispose();
-
-        }
 
         private static async Task SeedAsync(IRepository repo)
         {

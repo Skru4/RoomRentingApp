@@ -45,8 +45,11 @@ namespace RoomRentingApp.Core.Services
         public async Task<ApplicationUser> FindUserByIdAsync(string userId)
         {
             var user = await repo.All<ApplicationUser>()
-                .FirstAsync(u => u.Id == userId);
-
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user), UserNotFound);
+            }
             return user;
         }
 
