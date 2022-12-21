@@ -50,8 +50,8 @@ namespace RoomRentingApp.Core.Services
                         LandlordStatus = r.RoomCategory.LandlordStatus,
                         RoomSize = r.RoomCategory.RoomSize
                     },
-                    IsRented = r.RenterId != null
-
+                    IsRented = r.RenterId != null,
+                    
 
                 }).ToListAsync();
             return rooms;

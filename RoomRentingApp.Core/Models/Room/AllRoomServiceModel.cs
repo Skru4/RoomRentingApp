@@ -20,5 +20,7 @@ namespace RoomRentingApp.Core.Models.Room
 
         [Display(Name = "Is Rented")]
         public bool IsRented { get; set; }
+
+        public bool IsActive { get; set; } 
     }
 }

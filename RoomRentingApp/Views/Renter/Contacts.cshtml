@@ -18,11 +18,16 @@
 				<h5 class="card-title">Name: @user.FirstName @user.LastName</h5>
 					<h6 class="card-subtitle text-muted">Landlord</h6>
 					<p class="card-text">Phone number: <b>@user.PhoneNumber</b></p>
-					<p class="card-text">Number of added rooms: <b>@user.Rooms.Count()</b></p>
+					<p class="card-text">Number of added rooms: <b>@user.Rooms.Count(x=>x.IsActive)</b></p>
 					<p class="card-text">@foreach (var room in user.Rooms)
 				      {
-				       <p>Address: @room.Address / Room status: <b>@(@room.IsRented ? "Rented" : "Free")</b>
-				        <a asp-controller="Room" asp-action="Info" asp-route-roomId="@room.Id" class="btn btn-primary">Check</a> </p>
+				       <p>
+						   @if (room.IsActive == true)
+								{
+									<a>Address: @room.Address / Room status: <b>@(@room.IsRented ? "Rented" : "Free")</b></a>
+									<a asp-controller="Room" asp-action="Info" asp-route-roomId="@room.Id" class="btn btn-primary">Check</a> 
+								}
+				        </p>
 				       
 				      }
 					

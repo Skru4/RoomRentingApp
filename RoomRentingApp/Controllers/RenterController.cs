@@ -122,6 +122,7 @@ namespace RoomRentingApp.Controllers
         {
             var model = await landlordService.GetAllLandlordsAsync();
 
+
             return View(model);
         }
 

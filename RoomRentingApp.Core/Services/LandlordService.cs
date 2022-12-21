@@ -47,9 +47,9 @@ namespace RoomRentingApp.Core.Services
                 await repo.AddAsync(landlord);
                 await repo.SaveChangesAsync();
             }
-            catch (Exception )
+            catch (Exception)
             {
-                return new ErrorViewModel() {Message = UnexpectedErrorCreate };
+                return new ErrorViewModel() { Message = UnexpectedErrorCreate };
             }
             return null;
         }
@@ -85,7 +85,8 @@ namespace RoomRentingApp.Core.Services
                         Id = x.Id,
                         ImageUrl = x.ImageUrl,
                         PricePerWeek = x.PricePerWeek,
-                        IsRented = x.RenterId != null
+                        IsRented = x.RenterId != null,
+                        IsActive = x.IsActive,
                     }),
                 }).ToListAsync();
 
@@ -100,7 +101,7 @@ namespace RoomRentingApp.Core.Services
 
             if (landlord == null)
             {
-                throw new ArgumentNullException(nameof(landlord),CannotFind);
+                throw new ArgumentNullException(nameof(landlord), CannotFind);
             }
             return landlord;
         }

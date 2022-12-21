@@ -84,10 +84,10 @@ namespace RoomRentingApp.Core.Services
                     LastName = l.LastName,
                     PhoneNumber = l.PhoneNumber,
                     UserId = l.UserId,
-                    RoomsToRent = l.RoomsToRent.Select(lr => new RoomServiceModel()
+                    RoomsToRent = l.RoomsToRent.Select(lr => new AllRoomServiceModel()
                     {
-                        Id = lr.Id,
-
+                       Id = lr.Id,
+                       IsActive = lr.IsActive
                     }),
                     User = new ApplicationUser()
                     {

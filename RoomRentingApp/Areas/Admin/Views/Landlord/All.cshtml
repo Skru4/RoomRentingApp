@@ -15,7 +15,7 @@
 				<th scope="col">Phone Number</th>
 				<th scope="col">Fullname</th>
 				<th scope="col">Number of added rooms</th>
-				<th scope="col">Number of added rooms</th>
+				<th scope="col">Added rooms link</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -26,9 +26,9 @@
 						<td>@landlord.User.UserName</td>
 						<td>@landlord.PhoneNumber</td>
 						<td>@landlord.FirstName @landlord.LastName</td>
-						<td>@landlord.RoomsToRent.Count()</td>
+						<td>@landlord.RoomsToRent.Count(x=>x.IsActive)</td>
 					<td>
-						@foreach (var room in landlord.RoomsToRent)
+						@foreach (var room in landlord.RoomsToRent.Where(x=>x.IsActive))
 						{
 							<a asp-area="" asp-controller="Room" asp-action="Info" asp-route-roomId="@room.Id" class="btn btn-primary">Check</a>
 						}

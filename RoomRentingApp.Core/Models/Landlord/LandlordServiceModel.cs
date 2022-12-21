@@ -18,6 +18,6 @@ namespace RoomRentingApp.Core.Models.Landlord
 
         public ApplicationUser User { get; set; } = null!;
 
-        public IEnumerable<RoomServiceModel> RoomsToRent { get; set; } = Enumerable.Empty<RoomServiceModel>();
+        public IEnumerable<AllRoomServiceModel> RoomsToRent { get; set; } = Enumerable.Empty<AllRoomServiceModel>();
     }
 }
